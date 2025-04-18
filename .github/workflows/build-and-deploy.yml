@@ -18,14 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Update appsettings.Production.json with credentials in GitHub secrets
-        run: |
-          jq --arg certPassword "${{ secrets.RAVEN_CERT_PASSWORD }}" \
-             --arg certBase64 "${{ secrets.RAVEN_CERT_BASE64 }}" \
-             --argjson urls "$(echo "${{ secrets.RAVEN_URLS }}" | jq -R 'split(",")')" \
-             '.RavenSettings.Urls = $urls | .RavenSettings.CertPassword = $certPassword | .RavenSettings.CertBase64 = $certBase64' \
-             appsettings.Production.json > temp.json && mv temp.json appsettings.Production.json
-
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
