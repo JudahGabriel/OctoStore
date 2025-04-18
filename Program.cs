@@ -3,8 +3,12 @@ using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configure app configuration to include environment variables and appsettings.production.json
+builder.Configuration
+    .AddJsonFile($"appsettings.{builder.Environment}.json", optional: true, reloadOnChange: true) // load environment-specific settings
+    .AddEnvironmentVariables(); // Load settings from env vars
 
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddRavenDbDocStore(o =>
 {
