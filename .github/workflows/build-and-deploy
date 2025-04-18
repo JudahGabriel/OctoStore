@@ -18,6 +18,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Update database connection info with GitHub secrets
+        run: |
+          # Replace CertPassword
+          sed -i 's/"CertPassword": ""/"CertPassword": "${{ secrets.RAVEN_CERT_PASSWORD }}"/' appsettings.Production.json
+          
+          # Replace CertBase64
+          sed -i 's/"CertBase64": ""/"CertBase64": "${{ secrets.RAVEN_CERT_BASE64 }}"/' appsettings.Production.json
+          
+          # Replace Urls (convert comma-separated string to JSON array)
+          urls=$(echo "${{ secrets.RAVEN_URLS }}" | jq -R 'split(",")')
+          jq --argjson urls "$urls" '.RavenSettings.Urls = $urls' appsettings.Production.json > temp.json && mv temp.json appsettings.Production.json
+
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
