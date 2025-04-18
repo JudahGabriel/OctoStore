@@ -24,10 +24,10 @@ jobs:
           sed -i "s/\"CertPassword\": \"\"/\"CertPassword\": \"${{ secrets.RAVEN_CERT_PASSWORD }}\"/" appsettings.Production.json
           
           # Replace CertBase64
-          sed -i 's/"CertBase64": ""/"CertBase64": "${{ secrets.RAVEN_CERT_BASE64 }}"/' appsettings.Production.json
+          sed -i "s/\"CertBase64\": \"\"/\"CertBase64\": \"${{ secrets.RAVEN_CERT_BASE64 }}\"/" appsettings.Production.json
 
           # Replace DatabaseName
-          sed -i 's/"CertBase64": ""/"DatabaseName": "${{ secrets.RAVEN_DATABASE_NAME }}"/' appsettings.Production.json
+          sed -i "s/\"DatabaseName\": \"\"/\"DatabaseName\": \"${{ secrets.RAVEN_DATABASE_NAME }}\"/" appsettings.Production.json
           
           # Replace Urls (convert comma-separated string to JSON array)
           urls=$(echo "${{ secrets.RAVEN_URLS }}" | jq -R 'split(",")')
