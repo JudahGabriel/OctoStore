@@ -16,21 +16,22 @@ public class AppSubmissionController : ControllerBase
         _logger = logger;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="appManifest"></param>
-    /// <param name="key"></param>
-    /// <returns></returns>
-    [HttpPost]
-    public IActionResult Submit(
-        [FromBody] StorePublishManifest appManifest, 
-        [FromQuery] string? key,
-        [FromServices] IAsyncDocumentSession dbSession)
-    {
-        return Ok();
-    }
+    ///// <summary>
+    ///// 
+    ///// </summary>
+    ///// <param name="appManifest"></param>
+    ///// <param name="key"></param>
+    ///// <returns></returns>
+    //[HttpPost]
+    //public IActionResult Submit(
+    //    [FromBody] StorePublishManifest appManifest, 
+    //    [FromQuery] string? key,
+    //    [FromServices] IAsyncDocumentSession dbSession)
+    //{
+    //    return Ok();
+    //}
 
+    [HttpGet("")]
     [HttpGet("getAll")]
     public async Task<IActionResult> GetAll([FromServices] IAsyncDocumentSession dbSession)
     {

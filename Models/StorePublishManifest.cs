@@ -2,7 +2,7 @@
 
 // v1 omits:
 // pricing, availability, architectures, subcategory, system requirements, age rating, MSIX and exe submissions,
-// custom package image overrides, submission options, notes for certification
+// custom package image overrides, submission options, notes for certification, version
 
 public class StorePublishManifest
 {
@@ -14,4 +14,5 @@ public class StorePublishManifest
 
     public Category? SecondaryCategory { get; set; }
     public SupportInfo? Support { get; set; }
+    public ProgressiveWebAppPackage? PwaPackage { get; set; }
 }

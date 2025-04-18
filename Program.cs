@@ -1,3 +1,5 @@
+using OctoStore.Models;
+using OctoStore.Services;
 using Raven.DependencyInjection;
 using System.Security.Cryptography.X509Certificates;
 
@@ -6,9 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Configure app configuration to include environment variables and appsettings.production.json
 builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment}.json", optional: true, reloadOnChange: true) // load environment-specific settings
-    .AddEnvironmentVariables(); // Load settings from env vars
+    .AddEnvironmentVariables(); // Load settings from envs
 
 // Add services to the container.
+builder.Services.AddOptions();
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(AppSettings)));
 builder.Services.AddControllers();
 builder.Services.AddRavenDbDocStore(o =>
 {
@@ -26,6 +30,8 @@ builder.Services.AddRavenDbDocStore(o =>
     o.Certificate = X509CertificateLoader.LoadPkcs12(certBytes, certPassword);
 });
 builder.Services.AddRavenDbAsyncSession();
+builder.Services.AddSingleton<GitHubService>();
+builder.Services.AddHostedService<GitHubPublishManifestFinder>();
 
 var app = builder.Build();
 
