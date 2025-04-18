@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>c28c8ca7-a8d6-47e1-931c-6e4662b9ac85</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RavenDB.Client" Version="6.2.4" />
+    <PackageReference Include="RavenDB.DependencyInjection" Version="5.0.1" />
+  </ItemGroup>
+
+</Project>
