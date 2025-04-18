@@ -21,7 +21,7 @@ jobs:
       - name: Update database connection info with GitHub secrets
         run: |
           # Replace CertPassword
-          sed -i 's/"CertPassword": ""/"CertPassword": "${{ secrets.RAVEN_CERT_PASSWORD }}"/' appsettings.Production.json
+          sed -i "s/\"CertPassword\": \"\"/\"CertPassword\": \"${{ secrets.RAVEN_CERT_PASSWORD }}\"/" appsettings.Production.json
           
           # Replace CertBase64
           sed -i 's/"CertBase64": ""/"CertBase64": "${{ secrets.RAVEN_CERT_BASE64 }}"/' appsettings.Production.json
