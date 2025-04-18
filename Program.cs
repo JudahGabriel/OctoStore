@@ -1,6 +1,8 @@
 using OctoStore.Models;
 using OctoStore.Services;
+using Raven.Client.Documents;
 using Raven.DependencyInjection;
+using Raven.StructuredLogger;
 using System.Security.Cryptography.X509Certificates;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,7 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(
 builder.Services.AddControllers();
 builder.Services.AddRavenDbDocStore(o =>
 {
+    // Grab the database connection info from configuration.
     var certBase64 = builder.Configuration["RavenSettings:CertBase64"];
     if (string.IsNullOrEmpty(certBase64))
     {
@@ -28,10 +31,14 @@ builder.Services.AddRavenDbDocStore(o =>
     }
     var certBytes = Convert.FromBase64String(certBase64);
     o.Certificate = X509CertificateLoader.LoadPkcs12(certBytes, certPassword);
+
+    // Also, ignore self-referencing loops for Raven logging
+    o.BeforeInitializeDocStore = docStore => docStore.IgnoreSelfReferencingLoops();
 });
 builder.Services.AddRavenDbAsyncSession();
 builder.Services.AddSingleton<GitHubService>();
 builder.Services.AddHostedService<GitHubPublishManifestFinder>();
+builder.Services.AddRavenStructuredLogger();
 
 var app = builder.Build();
 
