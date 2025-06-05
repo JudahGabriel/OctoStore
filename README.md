@@ -1,7 +1,7 @@
 # OctoStore
 OctoStore lets you publish your open source app to the Microsoft Store without leaving your GitHub repo.
 
-You can think of this as a GitHub Actions build step that publishes an app to the Microsoft Store on Windows.
+Add a single JSON file to your repository and your app will be published to the Microsoft Store, the app store on Windows, free of charge, under the `Open Source Apps on GitHub` publisher.
 
 ## How to publish my app to the Microsoft Store
 
