@@ -13,7 +13,7 @@ All you need to do is include a file named `ms-store-publish.json` in your repo.
     "iconUrl": "https://etzmitzvot.com/assets/icons/logo-512x512.png",
     "category": "BooksAndReference",
     "secondaryCategory": "Education",
-    "privacyPolicyUrl": "https://messianicradio.com/#/privacy",
+    "privacyPolicyUrl": "https://etzmitzvot.com/privacy-policy.html",
     "pwaPackage": {
         "url": "https://etzmitzvot.com",
         "manifestUrl": "https://etzmitzvot.com/manifest.json",
