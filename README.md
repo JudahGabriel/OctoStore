@@ -3,7 +3,7 @@ OctoStore lets you publish your open source app to the Microsoft Store without l
 
 Add a single JSON file to your repository and your app will be published to the Microsoft Store, the app store on Windows, free of charge, under the `Open Source Apps on GitHub` publisher.
 
-## How to publish my app to the Microsoft Store
+# How to publish my app to the Microsoft Store
 
 All you need to do is include a file named `ms-store-publish.json` in your repo. For progressive web apps (PWAs), it should look like this:
 
@@ -54,3 +54,9 @@ All you need to do is include a file named `ms-store-publish.json` in your repo.
 ```
 
 For example, see [this repo's ms-store-publish.json](https://github.com/JudahGabriel/etzmitzvot/blob/master/public/ms-store-publish.json).
+
+# Is this a Microsoft-sponsored project?
+
+This started as an individual hackathon idea within Microsoft. It has since been given official support as an experimental idea by the Microsoft Store team. 
+
+Our goal is to see if developers find it useful. Our gauge for determining usefulness is by submitting PRs to add `ms-store-publish.json` to Windows apps repos on GitHub.
