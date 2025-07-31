@@ -39,6 +39,8 @@ public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
 
     public async Task FindManifestsOnGitHub()
     {
+        // Note: this will return the search result from the repo's default branch, e.g. main or master, unless otherwise specified.
+        // SearchFile name will not return results from other branches, which is what we want.
         var manifestFiles = await gitHubService.SearchFileName(ManifestFileName, 100);
         if (manifestFiles.Count == 0)
         {
@@ -48,13 +50,13 @@ public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
         using var dbSession = db.OpenAsyncSession();
         foreach (var file in manifestFiles)
         {
-            var submissionId = AppSubmission.GetIdFromManifestUrl(file.HtmlUrl);
+            var submissionId = AppSubmission.GetIdFromRepositoryName(file.Repository.FullName);
 
             // See if we have this submission already.
             var existingSubmission = await dbSession.LoadAsync<AppSubmission>(submissionId);
             if (existingSubmission != null && existingSubmission.ManifestSha == file.Sha)
             {
-                logger.LogInformation("Found ms-store-publish.json at {url} with SHA {sha}, but we've already processed file.", file.HtmlUrl, file.Sha);
+                logger.LogInformation("Found ms-store-publish.json at {url} with SHA {sha}, but we've already processed the file.", file.HtmlUrl, file.Sha);
                 continue;
             }
 

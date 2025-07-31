@@ -11,11 +11,11 @@
         public required AppSubmissionStatus Status { get; set; }
         public string? ErrorMessage { get; set; }
 
-        public static string GetIdFromManifestUrl(string manifestUrl)
+        public static string GetIdFromRepositoryName(string repoName)
         {
-            ArgumentNullException.ThrowIfNullOrEmpty(manifestUrl, nameof(manifestUrl));
+            ArgumentNullException.ThrowIfNullOrEmpty(repoName, nameof(repoName));
 
-            return $"AppSubmissions/{manifestUrl.Replace("https://github.com/", string.Empty)}";
+            return $"AppSubmissions/{repoName}";
         }
     }
 }
