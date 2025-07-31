@@ -14,7 +14,12 @@
         /// The submission date of the app. This is set to the current UTC time when the submission is created.
         /// </summary>
         public DateTimeOffset SubmissionDate { get; set; } = DateTimeOffset.UtcNow;
-        
+
+        /// <summary>
+        /// The email address of the developer who submitted the app. This is used to contact the developer about the status of their submission.
+        /// </summary>
+        public required string? DeveloperEmail { get; set; }
+
         /// <summary>
         /// The parsed ms-store-publish.json manifest. This will be null if the manifest could not be parsed due to malformed content.
         /// </summary>

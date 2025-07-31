@@ -5,12 +5,18 @@ Add a single JSON file to your repository and your app will be published to the 
 
 # How to publish my app to the Microsoft Store
 
-All you need to do is include a file named `ms-store-publish.json` in your repo. For progressive web apps (PWAs), it should look like this:
+All you need to do is include a file named `ms-store-publish.json` in your repo. Your app can be a Windows executable (.exe), a Windows installer (.msi), or a Progressive Web App (PWA).
+
+<details>
+
+<summary>Progressive Web Apps (PWAs)</summary>
+
+To publish your PWA to the Microsoft Store, add a `ms-store-publish.json` file to your repo. It should look like this:
 
 ```json
 {
     "name": "EtzMitzvot",
-    "iconUrl": "https://etzmitzvot.com/assets/icons/logo-512x512.png",
+    "iconUrl": "https://etzmitzvot.com/assets/icons/logo-512x512.png", 
     "category": "BooksAndReference",
     "secondaryCategory": "Education",
     "privacyPolicyUrl": "https://etzmitzvot.com/privacy-policy.html",
@@ -53,7 +59,13 @@ All you need to do is include a file named `ms-store-publish.json` in your repo.
 }
 ```
 
-For example, see [this repo's ms-store-publish.json](https://github.com/JudahGabriel/etzmitzvot/blob/master/public/ms-store-publish.json).
+</details>
+
+<details><summary>Windows executables (.exe or .msi)</summary>
+
+Support for exe and msi forthcoming.
+
+</details>
 
 # Is this a Microsoft-sponsored project?
 
