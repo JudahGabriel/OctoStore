@@ -57,7 +57,7 @@ public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
             var existingSubmission = await dbSession.LoadAsync<AppSubmission>(submissionId);
             if (existingSubmission != null && existingSubmission.ManifestSha == file.Sha)
             {
-                logger.LogInformation("Found ms-store-publish.json at {url} with SHA {sha}, but we've already processed the file.", file.HtmlUrl, file.Sha);
+                logger.LogInformation("Found ms-store-publish.json at {url} with SHA {sha}, but the file is unchanged since we last processed it.", file.HtmlUrl, file.Sha);
                 continue;
             }
 
@@ -74,11 +74,15 @@ public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
                     Status = AppSubmissionStatus.Processing
                 };
             }
+            else
+            {
+                existingSubmission.ManifestSha = file.Sha;
+            }
 
             // See if the ms-store-publish.json file can be loaded and parsed.
-            var manifest = await TryLoadManifest(file);
-            manifest.Match(val => existingSubmission.Manifest = val);
-            manifest.MatchException(err => 
+            var manifestOrError = await TryLoadManifest(file);
+            manifestOrError.Match(val => existingSubmission.Manifest = val);
+            manifestOrError.MatchException(err => 
             {
                 existingSubmission.Manifest = null;
                 existingSubmission.Status = AppSubmissionStatus.Error;
