@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Raven.Client.Documents;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using OctoStore.Common;
 
 namespace OctoStore.Services;
 
@@ -61,27 +62,31 @@ public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
             }
 
             // Create the app submission and save it to the database.
-            var submission = new AppSubmission
+            if (existingSubmission is null)
             {
-                Id = submissionId,
-                ManifestSha = file.Sha,
-                ManifestUrl = new Uri(file.HtmlUrl),
-                RepositoryUrl = new Uri(file.Repository.Url),
-                SubmissionDate = DateTimeOffset.UtcNow,
-                Status = AppSubmissionStatus.Processing
-            };
+                existingSubmission = new AppSubmission
+                {
+                    Id = submissionId,
+                    ManifestSha = file.Sha,
+                    ManifestUrl = new Uri(file.HtmlUrl),
+                    RepositoryUrl = new Uri(file.Repository.Url),
+                    SubmissionDate = DateTimeOffset.UtcNow,
+                    Status = AppSubmissionStatus.Processing
+                };
+            }
 
             // See if the ms-store-publish.json file can be loaded and parsed.
             var manifest = await TryLoadManifest(file);
-            manifest.Match(val => submission.Manifest = val);
+            manifest.Match(val => existingSubmission.Manifest = val);
             manifest.MatchException(err => 
             {
-                submission.Status = AppSubmissionStatus.Error;
-                submission.ErrorMessage = err;
+                existingSubmission.Manifest = null;
+                existingSubmission.Status = AppSubmissionStatus.Error;
+                existingSubmission.ErrorMessage = err;
                 logger.LogError("Failed to load manifest from {url}. Error: {error}", file.HtmlUrl, err);
             });
 
-            await dbSession.StoreAsync(submission);
+            await dbSession.StoreAsync(existingSubmission);
             await dbSession.SaveChangesAsync();
             logger.LogInformation("Found ms-store-publish.json at {url} with SHA {sha}. Saved to database.", file.HtmlUrl, file.Sha);
         }
@@ -105,7 +110,11 @@ public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
             var manifest = JsonSerializer.Deserialize<StorePublishManifest>(manifestContent, new JsonSerializerOptions 
             { 
                 PropertyNameCaseInsensitive = true,
-                Converters = { new JsonStringEnumConverter() }
+                Converters = 
+                {
+                    new JsonStringEnumConverter(),
+                    new GitHubRepoUriConverter(file.Repository.FullName) // FulName = "owner/repo". This will resolve relative URLs using github.com/owner/repo base the base.
+                }
             });
             if (manifest == null)
             {
