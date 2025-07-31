@@ -4,7 +4,11 @@
     {
         public required string Id { get; set; }
         public DateTimeOffset SubmissionDate { get; set; } = DateTimeOffset.UtcNow;
-        public required StorePublishManifest Manifest { get; set; }
+        
+        /// <summary>
+        /// The parsed ms-store-publish.json manifest. This will be null if the manifest could not be parsed due to malformed content.
+        /// </summary>
+        public StorePublishManifest? Manifest { get; set; }
         public string? ManifestSha { get; set; }
         public required Uri ManifestUrl { get; set; }
         public required Uri RepositoryUrl { get; set; }

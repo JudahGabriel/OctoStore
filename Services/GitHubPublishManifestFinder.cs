@@ -60,33 +60,34 @@ public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
                 continue;
             }
 
-            // Can we parse the file into a StorePublishManifest?
+            // Create the app submission and save it to the database.
+            var submission = new AppSubmission
+            {
+                Id = submissionId,
+                ManifestSha = file.Sha,
+                ManifestUrl = new Uri(file.HtmlUrl),
+                RepositoryUrl = new Uri(file.Repository.Url),
+                SubmissionDate = DateTimeOffset.UtcNow,
+                Status = AppSubmissionStatus.Processing
+            };
+
+            // See if the ms-store-publish.json file can be loaded and parsed.
             var manifest = await TryLoadManifest(file);
-            if (manifest != null)
+            manifest.Match(val => submission.Manifest = val);
+            manifest.MatchException(err => 
             {
-                // We have a new submission. Save it to the database.
-                var submission = new AppSubmission
-                {
-                    Id = submissionId,
-                    ManifestSha = file.Sha,
-                    ManifestUrl = new Uri(file.HtmlUrl),
-                    Manifest = manifest,
-                    RepositoryUrl = new Uri(file.Repository.Url),
-                    SubmissionDate = DateTimeOffset.UtcNow,
-                    Status = AppSubmissionStatus.Processing
-                };
-                await dbSession.StoreAsync(submission);
-                await dbSession.SaveChangesAsync();
-                logger.LogInformation("Found ms-store-publish.json at {url} with SHA {sha}. Saved to database.", file.HtmlUrl, file.Sha);
-            }
-            else
-            {
-                logger.LogError("Failed to load manifest from {url}", file.Url);
-            }
+                submission.Status = AppSubmissionStatus.Error;
+                submission.ErrorMessage = err;
+                logger.LogError("Failed to load manifest from {url}. Error: {error}", file.HtmlUrl, err);
+            });
+
+            await dbSession.StoreAsync(submission);
+            await dbSession.SaveChangesAsync();
+            logger.LogInformation("Found ms-store-publish.json at {url} with SHA {sha}. Saved to database.", file.HtmlUrl, file.Sha);
         }
     }
 
-    private async Task<StorePublishManifest?> TryLoadManifest(SearchCode file)
+    private async Task<Either<StorePublishManifest, string>> TryLoadManifest(SearchCode file)
     {
         string manifestContent;
         try
@@ -96,7 +97,7 @@ public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
         catch (Exception error)
         {
             logger.LogError(error, "Failed to load manifest content from {url}", file.HtmlUrl);
-            return null;
+            return new Either<StorePublishManifest, string>(error.Message);
         }
 
         try
@@ -109,15 +110,15 @@ public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
             if (manifest == null)
             {
                 logger.LogError("Failed to deserialize manifest content from {url}. Result was null.", file.HtmlUrl);
-                return null;
+                return new Either<StorePublishManifest, string>("Failed to deserialize manifest content.");
             }
 
-            return manifest;
+            return new Either<StorePublishManifest, string>(manifest);
         }
         catch (Exception deserializeError)
         {
             logger.LogError(deserializeError, "Failed to deserialize manifest content from {url}.", file.HtmlUrl);
-            return null;
+            return new Either<StorePublishManifest, string>(deserializeError.Message);
         }
     }
 }
