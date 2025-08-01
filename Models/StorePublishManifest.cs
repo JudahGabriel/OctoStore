@@ -4,8 +4,13 @@
 // pricing, availability, architectures, subcategory, system requirements, age rating, MSIX and exe submissions,
 // custom package image overrides, submission options, notes for certification, version
 
+/// <summary>
+/// Represents a ms-store-publish.json manifest file.
+/// </summary>
 public class StorePublishManifest
 {
+    public const string ManifestFileName = "ms-store-publish.json";
+
     /// <summary>
     /// The app name.
     /// </summary>

@@ -36,18 +36,16 @@ builder.Services.AddRavenDbDocStore(o =>
     o.BeforeInitializeDocStore = docStore => docStore.IgnoreSelfReferencingLoops();
 });
 builder.Services.AddRavenDbAsyncSession();
-builder.Services.AddSingleton<GitHubService>();
-builder.Services.AddHostedService<GitHubPublishManifestFinder>();
 builder.Services.AddRavenStructuredLogger();
+builder.Services.AddSingleton<GitHubService>();
+builder.Services.AddSingleton<AppSubmissionService>();
+builder.Services.AddHostedService<GitHubPublishManifestFinder>();
+builder.Services.AddHostedService<RepoScanner>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

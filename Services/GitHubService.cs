@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Octokit;
 using OctoStore.Models;
+using Raven.Client.Documents.Linq.Indexing;
 using System.Text;
 
 namespace OctoStore.Services;
@@ -25,21 +26,57 @@ public class GitHubService
     }
 
     /// <summary>
-    /// Searches GitHub for the specified file name.
+    /// Searches all GitHub public repositories for the specified file name. Note that GitHub does not search forks unless they have more stars than the upstream repo.
     /// </summary>
-    /// <param name="fileName"></param>
-    /// <param name="take"></param>
-    /// <returns></returns>
-    public async Task<IReadOnlyList<SearchCode>> SearchFileName(string fileName, int take = 100)
+    /// <param name="fileName">The file name to search for.</param>
+    /// <param name="page">The page number to search.</param>
+    /// <param name="take">The number of items to return in each page.</param>
+    /// <returns>A list of search results.</returns>
+    public async Task<IReadOnlyList<SearchCode>> SearchFileName(string fileName, int page = 1, int take = 100)
     {
         var searchRequest = new SearchCodeRequest(fileName)
         {
             In = [CodeInQualifier.Path],
             PerPage = take,
+            Page = page,
             FileName = fileName
         };
         var searchResults = await client.Search.SearchCode(searchRequest);
         return searchResults.Items;
+    }
+
+    public async Task<SearchCode?> SearchRepoForFileName(string fileName, string repoOwner, string repoName, int page = 1, int take = 10)
+    {
+        // See if GitHub Search will find it. Note that Search does not index forked repos.
+        var searchRequest = new SearchCodeRequest(fileName)
+        {
+            In = [CodeInQualifier.Path],
+            PerPage = take,
+            Page = page,
+            FileName = fileName,
+            Repos = [$"{repoOwner}/{repoName}"]
+        };
+        var searchResults = await client.Search.SearchCode(searchRequest);
+        if (searchResults.TotalCount > 0)
+        {
+            return searchResults.Items.FirstOrDefault();
+        }
+        
+        // Enumerate all the files in the repo's default branch and see if we can find it that way.
+        var repo = await client.Repository.Get(repoOwner, repoName);
+        var branch = repo.DefaultBranch;
+        var reference = await client.Git.Reference.Get(repoOwner, repoName, $"heads/{branch}");
+        var sha = reference.Object.Sha;
+        var tree = await client.Git.Tree.GetRecursive(repoOwner, repoName, sha);
+        var match = tree.Tree.FirstOrDefault(item =>
+            item.Type == TreeType.Blob &&
+            item.Path.EndsWith(fileName, StringComparison.OrdinalIgnoreCase));
+        if (match != null)
+        {
+            return new SearchCode(match.Path, match.Path, match.Sha, match.Url, "", $"{repo.HtmlUrl}/blob/{sha}/{match.Path}", repo);
+        }
+
+        return null;
     }
 
     /// <summary>

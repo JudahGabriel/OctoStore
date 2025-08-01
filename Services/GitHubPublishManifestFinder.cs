@@ -1,36 +1,36 @@
-﻿using Microsoft.Extensions.Options;
-using Octokit;
-using OctoStore.Models;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using OctoStore.Models;
 using Raven.Client.Documents;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using OctoStore.Common;
 
 namespace OctoStore.Services;
 
 /// <summary>
-/// Background service that periodically searches GitHub for ms-store-publish.json files and begins the publish process.
+/// Background service that periodically searches all of GitHub for ms-store-publish.json files and stores them in the database as AppSubmission objects.
 /// </summary>
 public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
 {
-    private const string ManifestFileName = "ms-store-publish.json";
-    private readonly GitHubService gitHubService;
+    private readonly GitHubService gitHub;
     private readonly IDocumentStore db;
+    private readonly AppSubmissionService appSubmissionSvc;
 
-    public GitHubPublishManifestFinder(GitHubService gitHubService, IDocumentStore db, ILogger<GitHubPublishManifestFinder> logger)
+    public GitHubPublishManifestFinder(
+        GitHubService gitHubService, 
+        AppSubmissionService appSubmissionService,
+        IDocumentStore db, 
+        ILogger<GitHubPublishManifestFinder> logger)
         : base(TimeSpan.FromSeconds(5), TimeSpan.FromHours(6), logger)
     {
-        this.gitHubService = gitHubService;
+        this.gitHub = gitHubService;
+        this.appSubmissionSvc = appSubmissionService;
         this.db = db;
     }
 
     public override async Task DoWorkAsync(CancellationToken cancelToken)
     {
+        logger.LogInformation("Finding ms-store-publish.json manifests on GitHub at {date}", DateTime.UtcNow);
         try
         {
-            await FindManifestsOnGitHub();
+            var processedFileCount = await FindManifestsOnGitHub();
+            logger.LogInformation("Completed processing {count} ms-store-publish.json files from GitHub.", processedFileCount);
         }
         catch (Exception error)
         {
@@ -38,106 +38,33 @@ public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
         }
     }
 
-    public async Task FindManifestsOnGitHub()
+    public async Task<int> FindManifestsOnGitHub()
     {
         // Note: this will return the search result from the repo's default branch, e.g. main or master, unless otherwise specified.
         // SearchFile name will not return results from other branches, which is what we want.
-        var manifestFiles = await gitHubService.SearchFileName(ManifestFileName, 100);
+        var manifestFiles = await gitHub.SearchFileName(StorePublishManifest.ManifestFileName, 1, 100);
+        int processedFileCount = 0;
         if (manifestFiles.Count == 0)
         {
-            logger.LogInformation("Found no ms-store-publish.json files");
+            logger.LogInformation("Found no ms-store-publish.json files.");
+            return processedFileCount;
         }
 
         using var dbSession = db.OpenAsyncSession();
         foreach (var file in manifestFiles)
         {
-            var submissionId = AppSubmission.GetIdFromRepositoryName(file.Repository.FullName);
-
-            // See if we have this submission already.
-            var existingSubmission = await dbSession.LoadAsync<AppSubmission>(submissionId);
-            if (existingSubmission != null && existingSubmission.ManifestSha == file.Sha)
+            try
             {
-                // See if we can skip process this file.
-                // We can skip it if: the SHA of the manifest hasn't changed and there are no new releases on GitHub.
-                var hasNewReleaseOnGitHub = await existingSubmission.HasNewReleaseOnGitHub(gitHubService, file.Repository);
-                if (!hasNewReleaseOnGitHub)
-                {
-                    logger.LogInformation("Found ms-store-publish.json at {url} with SHA {sha}, but the file is unchanged since we last processed it and there are no new releases on GitHub for the app.", file.HtmlUrl, file.Sha);
-                    continue;
-                }
+                await appSubmissionSvc.SaveAppSubmission(file, dbSession);
+                await dbSession.SaveChangesAsync();
+                processedFileCount++;
             }
-
-            // Create the app submission and save it to the database.
-            if (existingSubmission is null)
+            catch (Exception error)
             {
-                existingSubmission = new AppSubmission
-                {
-                    Id = submissionId,
-                    ManifestSha = file.Sha,
-                    ManifestUrl = new Uri(file.HtmlUrl),
-                    RepositoryUrl = new Uri(file.Repository.Url),
-                    SubmissionDate = DateTimeOffset.UtcNow,
-                    Status = AppSubmissionStatus.Processing
-                };
+                logger.LogError(error, "Error while processing ms-store-publish.json file on {repo}. Skipping and continuing processing other files.", file.Repository.FullName);
             }
-            else
-            {
-                existingSubmission.ManifestSha = file.Sha;
-            }
-
-            // See if the ms-store-publish.json file can be loaded and parsed.
-            var manifestOrError = await TryLoadManifest(file);
-            manifestOrError.Match(val => existingSubmission.Manifest = val);
-            manifestOrError.MatchException(err => 
-            {
-                existingSubmission.Manifest = null;
-                existingSubmission.Status = AppSubmissionStatus.Error;
-                existingSubmission.ErrorMessage = err;
-                logger.LogError("Failed to load manifest from {url}. Error: {error}", file.HtmlUrl, err);
-            });
-
-            await dbSession.StoreAsync(existingSubmission);
-            await dbSession.SaveChangesAsync();
-            logger.LogInformation("Found ms-store-publish.json at {url} with SHA {sha}. Saved to database.", file.HtmlUrl, file.Sha);
-        }
-    }
-
-    private async Task<Either<StorePublishManifest, string>> TryLoadManifest(SearchCode file)
-    {
-        string manifestContent;
-        try
-        {
-            manifestContent = await gitHubService.GetFileContent(file.Repository.Url, file.Path);
-        }
-        catch (Exception error)
-        {
-            logger.LogError(error, "Failed to load manifest content from {url}", file.HtmlUrl);
-            return new Either<StorePublishManifest, string>(error.Message);
         }
 
-        try
-        {
-            var manifest = JsonSerializer.Deserialize<StorePublishManifest>(manifestContent, new JsonSerializerOptions 
-            { 
-                PropertyNameCaseInsensitive = true,
-                Converters = 
-                {
-                    new JsonStringEnumConverter(),
-                    new GitHubRepoUriConverter(file.Repository.FullName) // FullName = "owner/repo". This will resolve relative URLs using github.com/owner/repo base the base.
-                }
-            });
-            if (manifest == null)
-            {
-                logger.LogError("Failed to deserialize manifest content from {url}. Result was null.", file.HtmlUrl);
-                return new Either<StorePublishManifest, string>("Failed to deserialize manifest content.");
-            }
-
-            return new Either<StorePublishManifest, string>(manifest);
-        }
-        catch (Exception deserializeError)
-        {
-            logger.LogError(deserializeError, "Failed to deserialize manifest content from {url}.", file.HtmlUrl);
-            return new Either<StorePublishManifest, string>(deserializeError.Message);
-        }
+        return processedFileCount;
     }
 }

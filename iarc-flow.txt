@@ -1,0 +1,48 @@
+
+IARC age rating questionaire
+	1. Choose one: Game, Social or Communication, All Other app types
+		a. Games? Yes no on the following:
+			i. Violoence, Blood, or Gory Images
+			ii. Fear
+			iii. Sexuality, suggestiveness, or Dating Games
+			iv. Gaming themes, simulated or real gambling
+			v. language
+			vi. controlled substance
+			vii. crude humor
+			viii. digital purchases, cash convertible rewards, or nfts
+			ix. Can exchange content with other users
+			x. Shares location with other users
+			xi. Contains swastikas or other Nazi symbols 
+			xii. Contains content that can substatially erod the national identity of the Republic of Korea
+			xiii. Advocates acts of terrorism
+			xiv. contains realistic descriptions of crimes
+			xv. will use ratings obtained directly from a ratings board
+		b. Social or Communication? Choose Communication or Social.
+			i. communication? 
+				1. Does the app share the user's current physical location with other users?
+				2. Does the app allow users to purchase digital goods?
+				3. Does the app include the ability to block users or user-generated content?
+				4. Does the app include ht ability to report users or user-generated content?
+				5. Does the app include chat moderation?
+				6. Can interaction be limited to friends only?
+			2. social?
+				1. Is app used to connect people for the purposes of dating or sexual relationships?
+				2. Permits public sharing of nudity
+				3. Permits sharing real-world graphic violence?
+				4. Permits sharing user's current physical location with other users
+				5. Allows purchasing digital goods
+				6. Includes ability to block users and user -geenrated content
+				7. Includes ability to report users or user-generated content?
+				8. Includes chat moderation?
+				9. Can interaction be limited to friends only?
+		c. All other app types
+			i. Contains sex, violence, language?
+			ii. Allows user content sharing with other users
+			iii. Includes online content not included in package
+			iv. Promotes age-restricted products like cigarettes or alcohol
+			v. Shares user's physical location
+			vi. Allows purchasing digital goods
+			vii. Includes cash rewards, gift cards, play-to-ear features, cryptocurrency, NFTs?
+			viii. Is a browser or search engine?
+			ix. Primarily a news or educational product
+			

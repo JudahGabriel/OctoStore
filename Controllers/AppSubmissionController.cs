@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using OctoStore.Models;
+using OctoStore.Services;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
 
@@ -10,26 +11,34 @@ namespace OctoStore.Controllers;
 public class AppSubmissionController : ControllerBase
 {
     private readonly ILogger<AppSubmissionController> _logger;
+    private readonly GitHubService gitHub;
 
-    public AppSubmissionController(ILogger<AppSubmissionController> logger)
+    public AppSubmissionController(GitHubService gitHub, ILogger<AppSubmissionController> logger)
     {
+        this.gitHub = gitHub;
         _logger = logger;
     }
 
-    ///// <summary>
-    ///// 
-    ///// </summary>
-    ///// <param name="appManifest"></param>
-    ///// <param name="key"></param>
-    ///// <returns></returns>
-    //[HttpPost]
-    //public IActionResult Submit(
-    //    [FromBody] StorePublishManifest appManifest, 
-    //    [FromQuery] string? key,
-    //    [FromServices] IAsyncDocumentSession dbSession)
-    //{
-    //    return Ok();
-    //}
+    /// <summary>
+    /// Schedules a scan of the specified repository for ms-store-publish.json files. If found, the app submission will be created in the database.
+    /// </summary>
+    /// <param name="repoName">The repository's full name in the form of "owner/repo", e.g. "JudahGabriel/etzmitzvot"</param>
+    /// <returns>OK if the repository was scheduled for scanning.</returns>
+    [HttpPost("scan")]
+    public async Task<IActionResult> Scan(
+        [FromQuery] string repoName,
+        [FromServices] IAsyncDocumentSession dbSession)
+    {
+        var (owner, repo) = RepositoryScanRequest.ValidateRepositoryFullName(repoName);
+        var repoScanRequest = new RepositoryScanRequest
+        {
+            Owner = owner,
+            Repo = repo
+        };
+        await dbSession.StoreAsync(repoScanRequest, $"RepositoryScanRequests/{owner}/{repo}");
+        await dbSession.SaveChangesAsync();
+        return Ok("Scan requested");
+    }
 
     [HttpGet("")]
     [HttpGet("getAll")]
