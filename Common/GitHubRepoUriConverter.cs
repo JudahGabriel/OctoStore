@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 /// </summary>
 public class GitHubRepoUriConverter : JsonConverter<Uri>
 {
-    private static readonly Uri GitHub = new Uri("https://github.com", UriKind.Absolute);
+    private static readonly Uri GitHub = new("https://github.com", UriKind.Absolute);
 
     private readonly string gitHubRepoFullName;
 
@@ -24,6 +24,7 @@ public class GitHubRepoUriConverter : JsonConverter<Uri>
         this.gitHubRepoFullName = gitHubRepoFullName ?? throw new ArgumentNullException(nameof(gitHubRepoFullName));
     }
 
+    /// <inheritdoc />
     public override Uri? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var uriString = reader.GetString();
@@ -32,15 +33,18 @@ public class GitHubRepoUriConverter : JsonConverter<Uri>
             return null;
         }
 
+        // Create the URI. If it's relative, prepend the full repo path.
         var uri = new Uri(uriString, UriKind.RelativeOrAbsolute);
         if (!uri.IsAbsoluteUri)
         {
             var pathWithOwnerAndRepo = $"/{gitHubRepoFullName}/{uriString.TrimStart('/')}"; // "/foo/bar.png" -> "/owner/repo/foo/bar.png"
             return new Uri(GitHub, pathWithOwnerAndRepo);
         }
+
         return uri;
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, Uri value, JsonSerializerOptions options)
     {
         writer.WriteStringValue(value.ToString());

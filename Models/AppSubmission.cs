@@ -1,4 +1,7 @@
-﻿namespace OctoStore.Models
+﻿using Octokit;
+using OctoStore.Services;
+
+namespace OctoStore.Models
 {
     /// <summary>
     /// A submission of an app on GitHub to the Microsoft Store.
@@ -47,6 +50,11 @@
         public string? ErrorMessage { get; set; }
 
         /// <summary>
+        /// Indicates whether the app utilizes GitHub Releases to update its versions.
+        /// </summary>
+        public DateTimeOffset? LatestGitHubReleaseDate { get; set; }
+
+        /// <summary>
         /// Gets the ID for an app submission based on the repository name.
         /// </summary>
         /// <param name="repoName">The full name of the repository on GitHub which includes both the owner's GitHub name and the repository name, e.g. "JudahGabriel/etzmitzvot"</param>
@@ -56,6 +64,23 @@
             ArgumentException.ThrowIfNullOrEmpty(repoName, nameof(repoName));
 
             return $"AppSubmissions/{repoName}";
+        }
+
+        /// <summary>
+        /// Checks whether there's a new release available for the app on GitHub.
+        /// </summary>
+        /// <param name="gitHub">The GitHub service.</param>
+        /// <param name="repo">The GitHub repo to check for a new release.</param>
+        /// <returns></returns>
+        public async Task<bool> HasNewReleaseOnGitHub(GitHubService gitHub, Repository repo)
+        {
+            var latestRelease = await gitHub.TryGetLatestRelease(repo);
+            if (latestRelease is null || latestRelease.PublishedAt is null)
+            {
+                return false;
+            }
+
+            return LatestGitHubReleaseDate is null || LatestGitHubReleaseDate < latestRelease.PublishedAt;
         }
     }
 }

@@ -50,4 +50,9 @@ public class StorePublishManifest
     /// The app package information for a progressive web app (PWA). This will be null if the app is not a PWA.
     /// </summary>
     public ProgressiveWebAppPackage? PwaPackage { get; set; }
+
+    /// <summary>
+    /// The app package information for a Windows executable (.exe or .msi). This will be null if the app is not a Windows executable.
+    /// </summary>
+    public WindowsExecutableAppPackage? WindowsExecutablePackage { get; set; }
 }

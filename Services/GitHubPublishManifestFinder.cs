@@ -57,8 +57,14 @@ public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
             var existingSubmission = await dbSession.LoadAsync<AppSubmission>(submissionId);
             if (existingSubmission != null && existingSubmission.ManifestSha == file.Sha)
             {
-                logger.LogInformation("Found ms-store-publish.json at {url} with SHA {sha}, but the file is unchanged since we last processed it.", file.HtmlUrl, file.Sha);
-                continue;
+                // See if we can skip process this file.
+                // We can skip it if: the SHA of the manifest hasn't changed and there are no new releases on GitHub.
+                var hasNewReleaseOnGitHub = await existingSubmission.HasNewReleaseOnGitHub(gitHubService, file.Repository);
+                if (!hasNewReleaseOnGitHub)
+                {
+                    logger.LogInformation("Found ms-store-publish.json at {url} with SHA {sha}, but the file is unchanged since we last processed it and there are no new releases on GitHub for the app.", file.HtmlUrl, file.Sha);
+                    continue;
+                }
             }
 
             // Create the app submission and save it to the database.
@@ -117,7 +123,7 @@ public class GitHubPublishManifestFinder : TimedBackgroundServiceBase
                 Converters = 
                 {
                     new JsonStringEnumConverter(),
-                    new GitHubRepoUriConverter(file.Repository.FullName) // FulName = "owner/repo". This will resolve relative URLs using github.com/owner/repo base the base.
+                    new GitHubRepoUriConverter(file.Repository.FullName) // FullName = "owner/repo". This will resolve relative URLs using github.com/owner/repo base the base.
                 }
             });
             if (manifest == null)
