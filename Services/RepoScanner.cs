@@ -64,7 +64,7 @@ public class RepoScanner : TimedBackgroundServiceBase
         logger.LogInformation("Processing repository scan request for {owner}/{repo}", scanRequest.Owner, scanRequest.Repo);
 
         // Scan the repo for ms-store-publish.json files.
-        var msStorePublishFile = await gitHubService.SearchRepo(StorePublishManifest.ManifestFileName, scanRequest.Owner, scanRequest.Repo, 1, 5);
+        var msStorePublishFile = await gitHubService.SearchRepoForFileName(StorePublishManifest.ManifestFileName, scanRequest.Owner, scanRequest.Repo, 1, 5);
         if (msStorePublishFile == null)
         {
             logger.LogInformation("Repo scan request for {owner}/{repo} found no ms-store-publish.json files.", scanRequest.Owner, scanRequest.Repo);
