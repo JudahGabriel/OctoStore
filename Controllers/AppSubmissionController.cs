@@ -8,7 +8,7 @@ namespace OctoStore.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AppSubmissionController : ControllerBase
+public class AppSubmissionController : Controller
 {
     private readonly ILogger<AppSubmissionController> _logger;
     private readonly GitHubService gitHub;
@@ -19,32 +19,38 @@ public class AppSubmissionController : ControllerBase
         _logger = logger;
     }
 
+    [HttpGet("status")]
+    public async Task<IActionResult> Status([FromQuery]string repo, [FromServices] IAsyncDocumentSession dbSession)
+    {
+        var appsSubmissionForRepo = await dbSession.LoadAsync<AppSubmission>(AppSubmission.GetIdFromRepositoryName(repo));
+        return View("status", appsSubmissionForRepo);
+    }
+
     /// <summary>
     /// Schedules a scan of the specified repository for ms-store-publish.json files. If found, the app submission will be created in the database.
     /// </summary>
-    /// <param name="repoName">The repository's full name in the form of "owner/repo", e.g. "JudahGabriel/etzmitzvot"</param>
+    /// <param name="repo">The repository's full name in the form of "owner/repo", e.g. "JudahGabriel/etzmitzvot"</param>
     /// <returns>OK if the repository was scheduled for scanning.</returns>
     [HttpPost("scan")]
     public async Task<IActionResult> Scan(
-        [FromQuery] string repoName,
+        [FromQuery] string repo,
         [FromServices] IAsyncDocumentSession dbSession)
     {
-        var (owner, repo) = RepositoryScanRequest.ValidateRepositoryFullName(repoName);
+        var (owner, repoName) = RepositoryScanRequest.ValidateRepositoryFullName(repo);
         var repoScanRequest = new RepositoryScanRequest
         {
             Owner = owner,
-            Repo = repo
+            Repo = repoName
         };
-        await dbSession.StoreAsync(repoScanRequest, $"RepositoryScanRequests/{owner}/{repo}");
+        await dbSession.StoreAsync(repoScanRequest, $"RepositoryScanRequests/{owner}/{repoName}");
         await dbSession.SaveChangesAsync();
         return Ok("Scan requested");
     }
 
-    [HttpGet("")]
-    [HttpGet("getAll")]
-    public async Task<IActionResult> GetAll([FromServices] IAsyncDocumentSession dbSession)
-    {
-        var submissions = await dbSession.Query<AppSubmission>().ToListAsync();
-        return Ok(submissions);
-    }
+    //[HttpGet("getAll")]
+    //public async Task<IActionResult> GetAll([FromServices] IAsyncDocumentSession dbSession)
+    //{
+    //    var submissions = await dbSession.Query<AppSubmission>().ToListAsync();
+    //    return Ok(submissions);
+    //}
 }

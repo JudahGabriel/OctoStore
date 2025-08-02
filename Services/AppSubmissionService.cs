@@ -43,7 +43,7 @@ public class AppSubmissionService
             var hasNewReleaseOnGitHub = latestReleaseOnGitHub?.PublishedAt != null && existingSubmission.LatestGitHubReleaseDate < latestReleaseOnGitHub.PublishedAt;
             if (existingSubmission.ManifestSha == file.Sha && !hasNewReleaseOnGitHub)
             {
-                logger.LogInformation("Skipping ms-store-pbulish.json at {url} with SHA {sha}. It's unchanged since we last processed it and there are no new releases on GitHub (GitHub last release date {ghLastReleaseDate}, last processed release date {lastProcessedReleaseDate}", file.HtmlUrl, file.Sha, latestReleaseOnGitHub?.PublishedAt, existingSubmission.LatestGitHubReleaseDate);
+                logger.LogInformation("Skipping ms-store-publish.json at {url} with SHA {sha}. It's unchanged since we last processed it and there are no new releases on GitHub (GitHub last release date {ghLastReleaseDate}, last processed release date {lastProcessedReleaseDate}", file.HtmlUrl, file.Sha, latestReleaseOnGitHub?.PublishedAt, existingSubmission.LatestGitHubReleaseDate);
                 return existingSubmission;
             }
 
@@ -60,13 +60,13 @@ public class AppSubmissionService
                 RepositoryUrl = new Uri(file.Repository.Url),
                 SubmissionDate = DateTimeOffset.UtcNow,
                 LatestGitHubReleaseDate = latestReleaseOnGitHub?.PublishedAt,
-                Status = AppSubmissionStatus.Processing
+                Status = AppSubmissionStatus.Scanning
             };
         }
 
         // See if the ms-store-publish.json file can be loaded and parsed.
         var manifestOrError = await TryLoadManifest(file);
-        manifestOrError.Match(val => existingSubmission.Manifest = val);
+        manifestOrError.Match(val => ManifestParsedSuccessfully(val, existingSubmission));
         manifestOrError.MatchException(err => ManifestParseFailed(err, file, latestReleaseOnGitHub, existingSubmission));
 
         // Save it to the database.
@@ -75,12 +75,17 @@ public class AppSubmissionService
         return existingSubmission;
     }
 
+    private void ManifestParsedSuccessfully(StorePublishManifest val, AppSubmission existingSubmission)
+    {
+        existingSubmission.Manifest = val;
+        existingSubmission.Status = existingSubmission.ConfirmedAppDeveloperAgreement ? AppSubmissionStatus.Processing : AppSubmissionStatus.WaitingToSignAppDevAgreement;
+    }
+
     private void ManifestParseFailed(string errorMessage, SearchCode file, Release? latestReleaseOnGitHub, AppSubmission existingSubmission)
     {
+        existingSubmission.Status = AppSubmissionStatus.Error;
         existingSubmission.ErrorMessage = errorMessage;
         existingSubmission.Manifest = null;
-        existingSubmission.Status = AppSubmissionStatus.Error;
-        existingSubmission.LatestGitHubReleaseDate = latestReleaseOnGitHub?.PublishedAt;
         logger.LogError("Failed to load manifest from {url}. Error: {error}", file.HtmlUrl, errorMessage);
     }
 

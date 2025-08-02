@@ -15,7 +15,7 @@ builder.Configuration
 // Add services to the container.
 builder.Services.AddOptions();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(nameof(AppSettings)));
-builder.Services.AddControllers();
+builder.Services.AddControllersWithViews();
 builder.Services.AddRavenDbDocStore(o =>
 {
     // Grab the database connection info from configuration.

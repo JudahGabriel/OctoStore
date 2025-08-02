@@ -55,6 +55,16 @@ namespace OctoStore.Models
         public DateTimeOffset? LatestGitHubReleaseDate { get; set; }
 
         /// <summary>
+        /// Whether the developer has signed the app developer agreement.
+        /// </summary>
+        public bool ConfirmedAppDeveloperAgreement { get; set; }
+
+        /// <summary>
+        /// The ID of the app in the Microsoft Store. This is set after the app is successfully submitted to the Store. This will be null if the app isn't yet published to the Store.
+        /// </summary>
+        public string? StoreProductId { get; set; }
+
+        /// <summary>
         /// Gets the ID for an app submission based on the repository name.
         /// </summary>
         /// <param name="repoName">The full name of the repository on GitHub which includes both the owner's GitHub name and the repository name, e.g. "JudahGabriel/etzmitzvot"</param>
@@ -62,6 +72,12 @@ namespace OctoStore.Models
         public static string GetIdFromRepositoryName(string repoName)
         {
             ArgumentException.ThrowIfNullOrEmpty(repoName, nameof(repoName));
+
+            var parts = repoName.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length != 2 || parts.Any(string.IsNullOrWhiteSpace))
+            {
+                throw new ArgumentException("Repository name must be in the format 'owner/repo'.", nameof(repoName));
+            }
 
             return $"AppSubmissions/{repoName}";
         }

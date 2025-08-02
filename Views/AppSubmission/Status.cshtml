@@ -1,0 +1,409 @@
+﻿@model OctoStore.Models.AppSubmission
+@using OctoStore.Models
+@using System.ComponentModel
+@using System.Reflection
+
+@{
+    string GetEnumDescription(Enum value)
+    {
+        var field = value.GetType().GetField(value.ToString());
+        if (field == null) return value.ToString().Replace("_", " ");
+        
+        var attribute = field.GetCustomAttribute<DescriptionAttribute>();
+        return !string.IsNullOrEmpty(attribute?.Description) ? attribute.Description : value.ToString().Replace("_", " ");
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>@(Model?.Manifest?.Name ?? "App Submission") - Microsoft Store Status</title>
+    <base href="/" />
+
+    <meta name="description" content="Shows you the status of a GitHub repository's publishing to the Microsoft Store">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.3/dist/styles/webawesome.css" />
+    <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.3/dist/webawesome.loader.js"></script>
+    
+    <style>
+        body {
+            font-family: var(--wa-font-sans);
+            margin: 0;
+            padding: 0;
+            background-color: var(--wa-color-neutral-50);
+            color: var(--wa-color-neutral-900);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .app-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+        
+        .status-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .screenshot {
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .features-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .repo-link {
+            color: var(--wa-color-primary-600);
+            text-decoration: none;
+        }
+        
+        .repo-link:hover {
+            text-decoration: underline;
+        }
+        
+        @@media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        @if (Model == null)
+        {
+            <wa-alert variant="danger" open>
+                <wa-icon slot="icon" name="exclamation-triangle"></wa-icon>
+                <strong>App submission not found</strong><br>
+                The requested app submission could not be found. Please check the repository name and try again.
+            </wa-alert>
+        }
+        else
+        {
+            <div class="header">
+                @if (Model.Manifest?.IconUrl != null)
+                {
+                    <img src="@Model.Manifest.IconUrl" alt="App Icon" class="app-icon" />
+                }
+                <div>
+                    <h1>@(Model.Manifest?.Name ?? "App Submission")</h1>
+                    <p style="margin: 0; color: var(--wa-color-neutral-600);">
+                        Repository: <a href="@Model.RepositoryUrl" class="repo-link" target="_blank">@Model.Id.Replace("AppSubmissions/", string.Empty)</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="status-cards">
+                <wa-card>
+                    <div slot="header">
+                        <h3 style="margin: 0;">Submission Status</h3>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        @{
+                            var statusVariant = Model.Status switch
+                            {
+                                AppSubmissionStatus.Published => "success",
+                                AppSubmissionStatus.Error => "danger",
+                                AppSubmissionStatus.Processing or AppSubmissionStatus.AwaitingReview => "primary",
+                                AppSubmissionStatus.Scanning => "neutral",
+                                _ => "warning"
+                            };
+                            
+                            var statusIcon = Model.Status switch
+                            {
+                                AppSubmissionStatus.Published => "check-circle",
+                                AppSubmissionStatus.Error => "x-circle",
+                                AppSubmissionStatus.Processing => "clock",
+                                AppSubmissionStatus.AwaitingReview => "eye",
+                                AppSubmissionStatus.Scanning => "search",
+                                _ => "exclamation-triangle"
+                            };
+                        }
+                        <wa-badge variant="@statusVariant" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                            <wa-icon name="@statusIcon" style="margin-right: 0.5rem;"></wa-icon>
+                            @GetEnumDescription(Model.Status)
+                        </wa-badge>
+                    </div>
+                    
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <wa-alert variant="danger" open style="margin-top: 1rem;">
+                            <wa-icon slot="icon" name="exclamation-triangle"></wa-icon>
+                            <strong>Error Details</strong><br>
+                            @Model.ErrorMessage
+                        </wa-alert>
+                    }
+                    
+                    @if (!string.IsNullOrEmpty(Model.StoreProductId))
+                    {
+                        <wa-alert variant="success" open style="margin-top: 1rem;">
+                            <wa-icon slot="icon" name="check-circle"></wa-icon>
+                            <strong>Published to Microsoft Store</strong><br>
+                            Product ID: @Model.StoreProductId
+                        </wa-alert>
+                    }
+                </wa-card>
+
+                <wa-card>
+                    <div slot="header">
+                        <h3 style="margin: 0;">Submission Details</h3>
+                    </div>
+                    <dl style="margin: 0;">
+                        <dt><strong>Submitted:</strong></dt>
+                        <dd style="margin-bottom: 1rem;">@Model.SubmissionDate.ToString("MMM dd, yyyy 'at' HH:mm UTC")</dd>
+                        
+                        @if (Model.LatestGitHubReleaseDate.HasValue)
+                        {
+                            <dt><strong>Latest GitHub Release:</strong></dt>
+                            <dd style="margin-bottom: 1rem;">@Model.LatestGitHubReleaseDate.Value.ToString("MMM dd, yyyy 'at' HH:mm UTC")</dd>
+                        }
+                        
+                        <dt><strong>Developer Agreement:</strong></dt>
+                        <dd style="margin-bottom: 1rem;">
+                            @if (Model.ConfirmedAppDeveloperAgreement)
+                            {
+                                <wa-badge variant="success">
+                                    <wa-icon name="check" style="margin-right: 0.25rem;"></wa-icon>
+                                    Signed
+                                </wa-badge>
+                            }
+                            else
+                            {
+                                <wa-badge variant="warning">
+                                    <wa-icon name="clock" style="margin-right: 0.25rem;"></wa-icon>
+                                    Pending
+                                </wa-badge>
+                            }
+                        </dd>
+                        
+                        <dt><strong>Manifest File:</strong></dt>
+                        <dd style="margin: 0;">
+                            <a href="@Model.ManifestUrl" target="_blank" class="repo-link">
+                                View ms-store-publish.json
+                            </a>
+                        </dd>
+                    </dl>
+                </wa-card>
+            </div>
+
+            @if (Model.Manifest != null)
+            {
+                <div class="content-grid">
+                    <div>
+                        <wa-card style="margin-bottom: 1.5rem;">
+                            <div slot="header">
+                                <h3 style="margin: 0;">App Information</h3>
+                            </div>
+                            
+                            @if (Model.Manifest.StoreListings?.FirstOrDefault() != null)
+                            {
+                                var primaryListing = Model.Manifest.StoreListings.FirstOrDefault(l => l.Language == "en") ?? Model.Manifest.StoreListings.First();
+                                
+                                <p><strong>Description:</strong></p>
+                                <p style="margin-bottom: 1rem;">@primaryListing.Description</p>
+                                
+                                @if (!string.IsNullOrEmpty(primaryListing.WhatsNew))
+                                {
+                                    <p><strong>What's New:</strong></p>
+                                    <p style="margin-bottom: 1rem;">@primaryListing.WhatsNew</p>
+                                }
+                                
+                                @if (primaryListing.Features?.Any() == true)
+                                {
+                                    <p><strong>Features:</strong></p>
+                                    <div class="features-list">
+                                        @foreach (var feature in primaryListing.Features)
+                                        {
+                                            <wa-badge variant="neutral">@feature</wa-badge>
+                                        }
+                                    </div>
+                                }
+                                
+                                @if (primaryListing.Keywords?.Any() == true)
+                                {
+                                    <p style="margin-top: 1rem;"><strong>Keywords:</strong></p>
+                                    <div class="features-list">
+                                        @foreach (var keyword in primaryListing.Keywords)
+                                        {
+                                            <wa-badge variant="primary">@keyword</wa-badge>
+                                        }
+                                    </div>
+                                }
+                                
+                                @if (primaryListing.Screenshots?.Any() == true)
+                                {
+                                    <p style="margin-top: 1.5rem;"><strong>Screenshots:</strong></p>
+                                    <div class="screenshots-grid">
+                                        @foreach (var screenshot in primaryListing.Screenshots)
+                                        {
+                                            <div>
+                                                <img src="@screenshot.Url" alt="@screenshot.Caption" class="screenshot" />
+                                                @if (!string.IsNullOrEmpty(screenshot.Caption))
+                                                {
+                                                    <p style="font-size: 0.8rem; margin-top: 0.5rem; color: var(--wa-color-neutral-600);">@screenshot.Caption</p>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            }
+                        </wa-card>
+                    </div>
+
+                    <div>
+                        <wa-card style="margin-bottom: 1.5rem;">
+                            <div slot="header">
+                                <h3 style="margin: 0;">Technical Details</h3>
+                            </div>
+                            
+                            <dl style="margin: 0;">
+                                <dt><strong>Category:</strong></dt>
+                                <dd style="margin-bottom: 1rem;">@Model.Manifest.Category.ToString().Replace("_", " ")</dd>
+                                
+                                @if (Model.Manifest.SecondaryCategory.HasValue)
+                                {
+                                    <dt><strong>Secondary Category:</strong></dt>
+                                    <dd style="margin-bottom: 1rem;">@Model.Manifest.SecondaryCategory.Value.ToString().Replace("_", " ")</dd>
+                                }
+                                
+                                @if (!string.IsNullOrEmpty(Model.Manifest.DeveloperEmail))
+                                {
+                                    <dt><strong>Developer Email:</strong></dt>
+                                    <dd style="margin-bottom: 1rem;">@Model.Manifest.DeveloperEmail</dd>
+                                }
+                                
+                                @if (Model.Manifest.PrivacyPolicyUrl != null)
+                                {
+                                    <dt><strong>Privacy Policy:</strong></dt>
+                                    <dd style="margin-bottom: 1rem;">
+                                        <a href="@Model.Manifest.PrivacyPolicyUrl" target="_blank" class="repo-link">
+                                            View Privacy Policy
+                                        </a>
+                                    </dd>
+                                }
+                                
+                                @if (Model.Manifest.PwaPackage != null)
+                                {
+                                    <dt><strong>Package Type:</strong></dt>
+                                    <dd style="margin-bottom: 1rem;">Progressive Web App (PWA)</dd>
+                                    
+                                    <dt><strong>PWA URL:</strong></dt>
+                                    <dd style="margin-bottom: 1rem;">
+                                        <a href="@Model.Manifest.PwaPackage.Url" target="_blank" class="repo-link">
+                                            @Model.Manifest.PwaPackage.Url
+                                        </a>
+                                    </dd>
+                                }
+                                
+                                @if (Model.Manifest.WindowsExecutablePackage != null)
+                                {
+                                    <dt><strong>Package Type:</strong></dt>
+                                    <dd style="margin: 0;">Windows Executable</dd>
+                                }
+                            </dl>
+                        </wa-card>
+
+                        @if (Model.Manifest.Support != null)
+                        {
+                            <wa-card>
+                                <div slot="header">
+                                    <h3 style="margin: 0;">Support Information</h3>
+                                </div>
+                                
+                                @if (!string.IsNullOrEmpty(Model.Manifest.Support.SupportContactInfo))
+                                {
+                                    <p><strong>Support Contact:</strong><br>
+                                    @Model.Manifest.Support.SupportContactInfo</p>
+                                }
+                                
+                                @if (Model.Manifest.Support.WebsiteUrl != null)
+                                {
+                                    <p><strong>Support Website:</strong><br>
+                                    <a href="@Model.Manifest.Support.WebsiteUrl" target="_blank" class="repo-link">@Model.Manifest.Support.WebsiteUrl</a></p>
+                                }
+                                
+                                @if (!string.IsNullOrEmpty(Model.Manifest.Support.Phone))
+                                {
+                                    <p><strong>Phone:</strong><br>
+                                    <a href="tel:@Model.Manifest.Support.Phone" class="repo-link">@Model.Manifest.Support.Phone</a></p>
+                                }
+                                
+                                @if (!string.IsNullOrEmpty(Model.Manifest.Support.AddressLine1))
+                                {
+                                    <p><strong>Address:</strong><br>
+                                    @Model.Manifest.Support.AddressLine1<br>
+                                    @if (!string.IsNullOrEmpty(Model.Manifest.Support.AddressLine2))
+                                    {
+                                        @Model.Manifest.Support.AddressLine2<br>
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.Manifest.Support.City))
+                                    {
+                                        @Model.Manifest.Support.City
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.Manifest.Support.StateProvince))
+                                    {
+                                        @(", " + Model.Manifest.Support.StateProvince)
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.Manifest.Support.PostalCode))
+                                    {
+                                        @(" " + Model.Manifest.Support.PostalCode)
+                                    }<br>
+                                    @if (!string.IsNullOrEmpty(Model.Manifest.Support.Country))
+                                    {
+                                        @Model.Manifest.Support.Country
+                                    }
+                                    </p>
+                                }
+                            </wa-card>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</body>
+
+</html>
