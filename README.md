@@ -11,7 +11,7 @@ All you need to do is include a file named `ms-store-publish.json` in your repo.
 
 <summary>Progressive Web Apps (PWAs)</summary>
 
-To publish your PWA to the Microsoft Store, add a `ms-store-publish.json` file to your repo. It should look like this:
+To publish your PWA to the Microsoft Store, add a `ms-store-publish.json` file to repo. It should include a `pwaPackage` section. Here's an [example of such a file](https://github.com/JudahGabriel/etzmitzvot/blob/master/public/ms-store-publish.json). It should look like this:
 
 ```json
 {
@@ -59,11 +59,78 @@ To publish your PWA to the Microsoft Store, add a `ms-store-publish.json` file t
 }
 ```
 
+## Releasing a new version of your PWA to the Microsoft Store
+
+To release a new version of your PWA to the Microsoft Store, create a new GitHub Release in your repo. 
+
+As with all PWAs, the Microsoft Store will always run the latest version of your PWA on the web. 
+
+Creating a new release on GitHub will cause your app in the Microsoft Store to have an incremented version.
+
 </details>
 
 <details><summary>Windows executables (.exe or .msi)</summary>
 
-Support for exe and msi forthcoming.
+To publish your Windows app to the Microsoft Store, add a `ms-store-publish.json` to your repo with a `windowsExecutablePackage` section linking to your GitHub Releases executable. [Example ms-store-publish.json](https://github.com/JudahGabriel/ambie/blob/main/ms-store-publish.json):
+
+```json
+{
+    "name": "Ambie White Noise",
+    "iconUrl": "/blob/main/src/AmbientSounds.Uwp/Assets/logo.png?raw=true",
+    "category": "HealthFitness",
+    "privacyPolicyUrl": "/blob/main/privacypolicy.md",
+    "developerEmail": "jenius_apps@outlook.com",
+    "windowsExecutablePackage": {
+        "gitHubReleasesX64FileName": "Ambie_{{version:4}}_x64.exe",
+        "gitHubReleasesArm64FileName": "Ambie_{{version:4}}_ARM64.exe"
+    },
+    "storeListings": [
+        {
+            "language": "en",
+            "name": "Ambie",
+            "description": "Ambie is the ultimate app to help you focus, study, or relax. We use white noise and nature sounds combined with an innovative focus timer to keep you concentrated on doing your best work. It's also fantastic for helping you relax, meditate, and sleep, all of which are essential to keep you refreshed and productive the next day. Altogether, Ambie is a reliable tool to boost your productivity. \r\n\r\n++ One of FastCompany's best new productivity apps in 2022 ++\r\n\r\n### Boost Your Productivity\r\n\r\nTake your productivity into new heights by using our innovative Focus Timer. Configure your focus and rest intervals and let Ambie guide you in your customized Focus Sessions. These sessions are designed to help keep you concentrated on your task, and we'll remind you to take an occasional break to keep your mind fresh.\r\n\r\n### A Growing Catalogue\r\n\r\nAlong with selection of built-in options, Ambie provides a vast catalogue of downloadable sounds both free and premium. Download sounds to add to your collection and discover your next favourite ambience.\r\n\r\n### Premium Subscription\r\n\r\nElevate your productivity by signing up for Ambie+, an affordable premium subscription that provides access to high-quality sounds and videos to help you focus, study, or relax.",
+            "shortDescription": "Ambie is an app that plays white noise and nature sounds to help you focus, sleep, and unwind. For many people, having background noise while working on a task helps with concentration. Ambie has a good starting selection of built-in sounds such as rain and beach waves that help you. These can also be used to help you sleep, relax, and de-stress. For instance, those with tinnitus and anxiety have reached out saying Ambie has helped them. And if you download Ambie from the Microsoft Store, you'll get access to a catalogue of online sounds that you can download to expand your library.",
+            "screenshots": [
+                {
+                    "url": "https://store-images.s-microsoft.com/image/apps.39021.14461052683240493.274a6984-fc70-4d2e-998c-34fcbc5f4c8e.2db7cf8a-d066-4ce6-81db-dfdedc96e39a",
+                    "caption": "Relax with Ambie's large catalogue of sounds to create your favourite experience"
+                },
+                {
+                    "url": "https://store-images.s-microsoft.com/image/apps.65442.14461052683240493.274a6984-fc70-4d2e-998c-34fcbc5f4c8e.ed08ebf8-9cb4-44f1-9fb4-179b0e33a6ef",
+                    "caption": "Use Ambie's built-in Pomodoro timer to help you focus"
+                },
+                {
+                    "url": "https://store-images.s-microsoft.com/image/apps.24658.14461052683240493.274a6984-fc70-4d2e-998c-34fcbc5f4c8e.855a8fb3-8bbe-4e9a-a7c1-f9507ae30cd9",
+                    "caption": "Practice selfcare with meditation guides"
+                }
+            ],
+            "keywords": [],
+            "developedBy": "Jenius Apps",
+            "whatsNew": "We fixed a few issues in channels and focus sessions. We also added official support for fr-CA. Thanks to all of you that sent feedback!"
+        }
+    ]
+}
+```
+
+## Releasing a new version of your Windows app to the Microsoft Store
+
+To release a new version of your Windows app to the Microsoft Store, create a new Release on GitHub. The GitHub Release should contain a link the x64 or ARM64 version of your executable, or both. 
+
+For example, you might create a new GitHub Release for your app with the following assets:
+
+- `MyApp_1.0.0_x64.exe`: with a link like https://github.com/MyUser/MyApp/releases/download/v1.0.0.0/MyApp_1.0.0_x64.exe
+- `MyApp_1.0.0_ARM64.exe`: with a link like https://github.com/MyUser/MyApp/releases/download/v1.0.0.0/MyApp_1.0.0_ARM64.exe
+
+Then in your `ms-store-publish.json` file, you would have the following:
+```json`
+{
+    "windowsExecutablePackage": {
+        "gitHubReleasesX64FileName": "MyApp_{{version:3}}_x64.exe",
+        "gitHubReleasesArm64FileName": "MyApp_{{version:3}}_ARM64.exe"
+    }
+}
+
+```
 
 </details>
 
