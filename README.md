@@ -181,7 +181,7 @@ Once you've added a `ms-store-publish.json` file to your repo, you can view the 
 
 <summary>Is this an official Microsoft project?</summary>
 
-Yes. This started as an individual hackathon idea within Microsoft. It has since been given official support as an experimental idea by the Microsoft Store team.
+This started as an individual hackathon idea within Microsoft. It has since been given official support as an experimental idea by the Microsoft Store team.
 
 </details>
 
@@ -215,9 +215,9 @@ If you haven't already, you will need to agree to the Microsoft App Developer Ag
 
 <summary>I already have a Partner Center account. Can I use that?</summary>
 
-No, not at this time. OctoStore is designed to make it easy to publish open source apps to the Microsoft Store without needing a Partner Center account. If you already have a Partner Center account and app reservation, you should continue using that.
+OctoStore is designed to simplify publishing open source apps to the Microsoft Store without needing a Partner Center account. If you already have a Partner Center account, we recommend just using that to publish your apps.
 
-You may be interested in the [Microsoft Store CLI](https://github.com/microsoft/msstore-cli) and corresponding [Microsoft Store CLI GitHub Action](https://marketplace.visualstudio.com/items?itemName=ms-aps-msstorecli.microsoft-store-developer-cli-task) that help you publish your app to the Microsoft Store using your existing Partner Center account.
+If you have a Partner Center account, we recommend using the [Microsoft Store CLI](https://github.com/microsoft/msstore-cli) and corresponding [Microsoft Store CLI GitHub Action](https://marketplace.visualstudio.com/items?itemName=ms-aps-msstorecli.microsoft-store-developer-cli-task). These can help you publish your open source app to the Microsoft Store.
 </details>
 
 <details>
