@@ -132,6 +132,16 @@ Then in your `ms-store-publish.json` file, you would have the following:
 
 ```
 
+Note that these are file names, not absolute URLs, as OctoStore will automatically grab the latest version of your app.
+
+When specifying your executable file name, you can use the `{{version}}` template to specify the version of your app. 
+
+- {{version}}: "4.2.0.0"
+- {{version:3}}: "4.2.0"
+- {{version:2}}: "4.2"
+
+Your executable file should be an `.exe`, `.appx`, `.appxbundle`, `.msi`, `.msix`, or `.msixbundle`.
+
 </details>
 
 # Is this a Microsoft-sponsored project?
