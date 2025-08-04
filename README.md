@@ -110,14 +110,6 @@ For PWAs, `pwaPackage.url` and `pwaPackage.manifestUrl` are required. The `pwaPa
 
 These URLs must be absolute URLs to your PWA on the web. They cannot be relative URLs or links to files in your repo.
 
-## Releasing a new version of your PWA to the Microsoft Store
-
-To release a new version of your PWA to the Microsoft Store, create a new GitHub Release in your repo.
-
-As with all PWAs, the Microsoft Store will always run the latest version of your PWA on the web. 
-
-Creating a new release on GitHub will cause your app in the Microsoft Store to have an incremented version.
-
 </details>
 
 ## Releasing a new version of your app in the Microsoft Store
