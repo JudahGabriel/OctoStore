@@ -172,8 +172,6 @@ Icons should be square PNG images, ideally 512x512 pixels or larger.
 ## View your status page
 
 Once you've added a `ms-store-publish.json` file to your repo, you can view the status of your app's submission to the Store at https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azurewebsites.net/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO, where YOUR_GITHUB_NAME/YOUR_REPO is Your GitHub name and repo, e.g. `JudahGabriel/ambie`.
-```
-
 
 ## Frequently Asked Questions
 
