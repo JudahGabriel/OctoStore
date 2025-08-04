@@ -57,7 +57,7 @@ To publish your Windows app to the Microsoft Store, add a `ms-store-publish.json
 <details>
 
 <summary>Publishing Progressive Web Apps (PWAs) to the Microsoft Store</summary>
-<br>
+
 To publish your PWA to the Microsoft Store, add a `ms-store-publish.json` file to repo. It should include a `pwaPackage` section. Here's an [example of such a file](https://github.com/JudahGabriel/etzmitzvot/blob/master/public/ms-store-publish.json). It should look like this:
 
 ```json
