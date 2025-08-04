@@ -181,6 +181,7 @@ Yes. This started as an individual hackathon idea within Microsoft. It has since
 </details>
 
 <details>
+&nbsp;
 <summary>How does this work?</summary>
 OctoStore searches GitHub for `ms-store-publish.json` files in public repositories. When it finds one, it will begin publishing your app to the Microsof Store. The publisher of your app will appear as `Open Source Apps on GitHub`.
 </details>
