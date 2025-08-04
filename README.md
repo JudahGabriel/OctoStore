@@ -7,7 +7,9 @@ Add a single JSON file to your repository and your app will be published to the 
 
 All you need to do is include a file named `ms-store-publish.json` in your repo. Your app can be a Windows executable (`.exe`, `.appx`, `.appxbundle`, `.msi`, `.msix`, or `.msixbundle`) or a [Progressive Web App (PWA)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/What_is_a_progressive_web_app).
 
-<details><summary>Publishing Windows executables to the Microsoft Store</summary>
+<details>
+
+<summary>Publishing Windows executables to the Microsoft Store</summary>
 
 To publish your Windows app to the Microsoft Store, add a `ms-store-publish.json` to your repo with a `windowsExecutablePackage` section linking to your GitHub Releases executable. [Example ms-store-publish.json](https://github.com/JudahGabriel/ambie/blob/main/ms-store-publish.json):
 
@@ -55,7 +57,7 @@ To publish your Windows app to the Microsoft Store, add a `ms-store-publish.json
 <details>
 
 <summary>Publishing Progressive Web Apps (PWAs) to the Microsoft Store</summary>
-
+<br>
 To publish your PWA to the Microsoft Store, add a `ms-store-publish.json` file to repo. It should include a `pwaPackage` section. Here's an [example of such a file](https://github.com/JudahGabriel/etzmitzvot/blob/master/public/ms-store-publish.json). It should look like this:
 
 ```json
@@ -176,41 +178,51 @@ Once you've added a `ms-store-publish.json` file to your repo, you can view the 
 ## Frequently Asked Questions
 
 <details>
+
 <summary>Is this an official Microsoft project?</summary>
+
 Yes. This started as an individual hackathon idea within Microsoft. It has since been given official support as an experimental idea by the Microsoft Store team.
+
 </details>
 
 <details>
-
 <summary>How does this work?</summary>
 
 OctoStore searches GitHub for `ms-store-publish.json` files in public repositories. When it finds one, it will begin publishing your app to the Microsof Store. The publisher of your app will appear as `Open Source Apps on GitHub`.
-
 </details>
 
 <details>
+
 <summary>How do I know if my app was published to the Microsoft Store?</summary>
 Go to https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azurewebsites.net/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO
 </details>
 
 <details>
+
 <summary>What happens if my app is rejected?</summary>
+
 Go to [your status page](https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azurewebsites.net/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO) and you'll see any rejection notice. Address any issues and create a new release on GitHub to publish to the Store again.
 </details>
 
 <details>
+
 <summary>Is there anything else I need to do besides adding `ms-store-publish.json`?</summary>
+
 If you haven't already, you will need to agree to the Microsoft App Developer Agreement. Go to [your status page](https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azurewebsites.net/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO) and you'll be prompted to approve the agreement. You only need to do this once per GitHub account.
 </details>
 
 <details>
+
 <summary>I already have a Partner Center account. Can I use that?</summary>
+
 No, not at this time. OctoStore is designed to make it easy to publish open source apps to the Microsoft Store without needing a Partner Center account. If you have a Partner Center account. If you already have a Partner Center account and app reservation, you should continue using that.
 
 You may be interested in the [Microsoft Store CLI](https://github.com/microsoft/msstore-cli) and corresponding [Microsoft Store CLI GitHub Action](https://marketplace.visualstudio.com/items?itemName=ms-aps-msstorecli.microsoft-store-developer-cli-task) that help you publish your app to the Microsoft Store using your existing Partner Center account.
 </details>
 
 <details>
+
 <summary>If I use this, can I eventually migrate to my own Partner Center account?</summary>
+
 Yes. Reach out to us juhimang @ microsoft to migrate.
 </details>
