@@ -160,6 +160,8 @@ If your app is a PWA, note that your app will always run the latest version of y
 
 To update your app's release notes in the Microsoft Store, you can include a `whatsNew` field in your `ms-store-publish.json` file. This field should contain a string with the release notes for your app.
 
+The `whatsNew` field can also be a link that contains the release notes. It can be an absolute URL or a relative URL to a file in your repo.
+
 Alternately, if you omit `whatsNew`, OctoStore will automatically use the release notes from your latest GitHub Release.
 
 
