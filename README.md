@@ -7,7 +7,7 @@ Add a single JSON file to your repository and your app will be published to the 
 
 All you need to do is include a file named `ms-store-publish.json` in your repo. Your app can be a Windows executable (`.exe`, `.appx`, `.appxbundle`, `.msi`, `.msix`, or `.msixbundle`) or a [Progressive Web App (PWA)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/What_is_a_progressive_web_app).
 
-<details><summary>Windows executables</summary>
+<details><summary>Publishing Windows executables to the Microsoft Store</summary>
 
 To publish your Windows app to the Microsoft Store, add a `ms-store-publish.json` to your repo with a `windowsExecutablePackage` section linking to your GitHub Releases executable. [Example ms-store-publish.json](https://github.com/JudahGabriel/ambie/blob/main/ms-store-publish.json):
 
@@ -54,7 +54,7 @@ To publish your Windows app to the Microsoft Store, add a `ms-store-publish.json
 
 <details>
 
-<summary>Progressive Web Apps (PWAs)</summary>
+<summary>Publishing Progressive Web Apps (PWAs) to the Microsoft Store</summary>
 
 To publish your PWA to the Microsoft Store, add a `ms-store-publish.json` file to repo. It should include a `pwaPackage` section. Here's an [example of such a file](https://github.com/JudahGabriel/etzmitzvot/blob/master/public/ms-store-publish.json). It should look like this:
 
@@ -124,7 +124,7 @@ Creating a new release on GitHub will cause your app in the Microsoft Store to h
 
 To release a new version of your app to the Microsoft Store, use GitHub Releases to create a new release of your app on GitHub. OctoStore will automatically pick it up and publish that release to the Microsoft Store. The version in the Store will match the version on GitHub.
 
-If your app is a Windows executable (`.exe`, `.appx`, or `.appxbundle`, `.msi`, `.msix`, `.msixbundle`), the GitHub Release should contain a link the x64 or ARM64 version of your executable, or both. 
+If your app is a Windows executable (`.exe`, `.appx`, `.appxbundle`, `.msi`, `.msix`, or `.msixbundle`), the GitHub Release should contain a link the x64 or ARM64 version of your executable, or both. 
 
 For example, you might create a new GitHub Release for your app with the following assets:
 
