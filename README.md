@@ -207,7 +207,9 @@ Go to [your status page](https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azu
 <details>
 
 <summary>
+
 Is there anything else I need to do besides adding `ms-store-publish.json`?
+
 </summary>
 
 If you haven't already, you will need to agree to the Microsoft App Developer Agreement. Go to [your status page](https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azurewebsites.net/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO) and you'll be prompted to approve the agreement. You only need to do this once per GitHub account.
