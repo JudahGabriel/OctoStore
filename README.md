@@ -215,7 +215,7 @@ If you haven't already, you will need to agree to the Microsoft App Developer Ag
 
 <summary>I already have a Partner Center account. Can I use that?</summary>
 
-No, not at this time. OctoStore is designed to make it easy to publish open source apps to the Microsoft Store without needing a Partner Center account. If you have a Partner Center account. If you already have a Partner Center account and app reservation, you should continue using that.
+No, not at this time. OctoStore is designed to make it easy to publish open source apps to the Microsoft Store without needing a Partner Center account. If you already have a Partner Center account and app reservation, you should continue using that.
 
 You may be interested in the [Microsoft Store CLI](https://github.com/microsoft/msstore-cli) and corresponding [Microsoft Store CLI GitHub Action](https://marketplace.visualstudio.com/items?itemName=ms-aps-msstorecli.microsoft-store-developer-cli-task) that help you publish your app to the Microsoft Store using your existing Partner Center account.
 </details>
