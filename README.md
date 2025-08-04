@@ -60,14 +60,14 @@ For example, you might create a new GitHub Release for your app with the followi
 - `MyApp_1.0.0_ARM64.exe`: with a link like https://github.com/MyUser/MyApp/releases/download/v1.0.0.0/MyApp_1.0.0_ARM64.exe
 
 Then in your `ms-store-publish.json` file, you would have the following:
-```json`
+
+```json
 {
     "windowsExecutablePackage": {
         "gitHubReleasesX64FileName": "MyApp_{{version:3}}_x64.exe",
         "gitHubReleasesArm64FileName": "MyApp_{{version:3}}_ARM64.exe"
     }
 }
-
 ```
 
 Note that these are file names, not absolute URLs, as OctoStore will automatically grab the latest version of your app from your repo's GitHub Releases.
