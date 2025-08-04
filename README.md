@@ -5,71 +5,9 @@ Add a single JSON file to your repository and your app will be published to the 
 
 # How to publish my app to the Microsoft Store
 
-All you need to do is include a file named `ms-store-publish.json` in your repo. Your app can be a Windows executable (.exe), a Windows installer (.msi), or a Progressive Web App (PWA).
+All you need to do is include a file named `ms-store-publish.json` in your repo. Your app can be a Windows executable (`.exe`, `.appx`, or `.appxbundle`, `.msi`, `.msix`, `.msixbundle`) or a [Progressive Web App (PWA)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/What_is_a_progressive_web_app).
 
-<details>
-
-<summary>Progressive Web Apps (PWAs)</summary>
-
-To publish your PWA to the Microsoft Store, add a `ms-store-publish.json` file to repo. It should include a `pwaPackage` section. Here's an [example of such a file](https://github.com/JudahGabriel/etzmitzvot/blob/master/public/ms-store-publish.json). It should look like this:
-
-```json
-{
-    "name": "EtzMitzvot",
-    "iconUrl": "https://etzmitzvot.com/assets/icons/logo-512x512.png", 
-    "category": "BooksAndReference",
-    "secondaryCategory": "Education",
-    "privacyPolicyUrl": "https://etzmitzvot.com/privacy-policy.html",
-    "pwaPackage": {
-        "url": "https://etzmitzvot.com",
-        "manifestUrl": "https://etzmitzvot.com/manifest.json",
-        "serviceWorkerUrl": "https://etzmitzvot.com/sw.js"
-    },
-    "storeListings": [
-        {
-            "language": "en",
-            "name": "Etz Mitzvot",
-            "description": "A visual tree graph of the commandments in the Hebrew Bible. Explore commandments, see their relationship to other commandments, understand the Bible better.",
-            "shortDescription": "A visual tree graph of the commandments in the Hebrew Bible",
-            "screenshots": [
-                {
-                    "url": "https://etzmitzvot.com/assets/screenshots/screenshot-cmds.png",
-                    "caption": "A visual hierarchy of all the commandments in the Hebrew Bible"
-                },
-                {
-                    "url": "https://etzmitzvot.com/assets/screenshots/screenshot-cmd-details.png",
-                    "caption": "Tap a commandment to read more about it, see its relationships to other commandments, and read the underlying passage."
-                },
-                {
-                    "url": "https://etzmitzvot.com/assets/screenshots/screenshot-cmd-sidebar.png",
-                    "caption": "Dig into statistics and information about the commandments in the Hebrew Bible."
-                }
-            ],
-            "keywords": ["bible", "torah", "judaism", "mitzvot", "commandments"],
-            "developedBy": "Bless Israel",
-            "features": [
-                "Explore the commandments in the Hebrew Bible",
-                "See the relationships between commandments",
-                "Read the underlying passages of each commandment",
-                "Learn about the commandments in a visual way"
-            ],
-            "whatsNew": "Added commandment 75, added store publish.json"
-        }
-    ]
-}
-```
-
-## Releasing a new version of your PWA to the Microsoft Store
-
-To release a new version of your PWA to the Microsoft Store, create a new GitHub Release in your repo. 
-
-As with all PWAs, the Microsoft Store will always run the latest version of your PWA on the web. 
-
-Creating a new release on GitHub will cause your app in the Microsoft Store to have an incremented version.
-
-</details>
-
-<details><summary>Windows executables (.exe or .msi)</summary>
+<details><summary>Windows executables (`.exe`, `.appx`, or `.appxbundle`, `.msi`, `.msix`, `.msixbundle`)</summary>
 
 To publish your Windows app to the Microsoft Store, add a `ms-store-publish.json` to your repo with a `windowsExecutablePackage` section linking to your GitHub Releases executable. [Example ms-store-publish.json](https://github.com/JudahGabriel/ambie/blob/main/ms-store-publish.json):
 
@@ -132,9 +70,9 @@ Then in your `ms-store-publish.json` file, you would have the following:
 
 ```
 
-Note that these are file names, not absolute URLs, as OctoStore will automatically grab the latest version of your app.
+Note that these are file names, not absolute URLs, as OctoStore will automatically grab the latest version of your app from your repo's GitHub Releases.
 
-When specifying your executable file name, you can use the `{{version}}` template to specify the version of your app. 
+When adding your executable file name, you can use the `{{version}}` template to specify the version of your app.
 
 - {{version}}: "4.2.0.0"
 - {{version:3}}: "4.2.0"
@@ -143,6 +81,88 @@ When specifying your executable file name, you can use the `{{version}}` templat
 Your executable file should be an `.exe`, `.appx`, `.appxbundle`, `.msi`, `.msix`, or `.msixbundle`.
 
 </details>
+
+<details>
+
+<summary>Progressive Web Apps (PWAs)</summary>
+
+To publish your PWA to the Microsoft Store, add a `ms-store-publish.json` file to repo. It should include a `pwaPackage` section. Here's an [example of such a file](https://github.com/JudahGabriel/etzmitzvot/blob/master/public/ms-store-publish.json). It should look like this:
+
+```json
+{
+    "name": "EtzMitzvot",
+    "iconUrl": "https://etzmitzvot.com/assets/icons/logo-512x512.png", 
+    "category": "BooksAndReference",
+    "secondaryCategory": "Education",
+    "privacyPolicyUrl": "https://etzmitzvot.com/privacy-policy.html",
+    "pwaPackage": {
+        "url": "https://etzmitzvot.com",
+        "manifestUrl": "https://etzmitzvot.com/manifest.json",
+        "serviceWorkerUrl": "https://etzmitzvot.com/sw.js"
+    },
+    "storeListings": [
+        {
+            "language": "en",
+            "name": "Etz Mitzvot",
+            "description": "A visual tree graph of the commandments in the Hebrew Bible. Explore commandments, see their relationship to other commandments, understand the Bible better.",
+            "shortDescription": "A visual tree graph of the commandments in the Hebrew Bible",
+            "screenshots": [
+                {
+                    "url": "https://etzmitzvot.com/assets/screenshots/screenshot-cmds.png",
+                    "caption": "A visual hierarchy of all the commandments in the Hebrew Bible"
+                },
+                {
+                    "url": "https://etzmitzvot.com/assets/screenshots/screenshot-cmd-details.png",
+                    "caption": "Tap a commandment to read more about it, see its relationships to other commandments, and read the underlying passage."
+                },
+                {
+                    "url": "https://etzmitzvot.com/assets/screenshots/screenshot-cmd-sidebar.png",
+                    "caption": "Dig into statistics and information about the commandments in the Hebrew Bible."
+                }
+            ],
+            "keywords": ["bible", "torah", "judaism", "mitzvot", "commandments"],
+            "developedBy": "Bless Israel",
+            "features": [
+                "Explore the commandments in the Hebrew Bible",
+                "See the relationships between commandments",
+                "Read the underlying passages of each commandment",
+                "Learn about the commandments in a visual way"
+            ],
+            "whatsNew": "Added commandment 75, added store publish.json"
+        }
+    ]
+}
+```
+
+## Required fields for PWAs
+
+For PWAs, `pwaPackage.url` and `pwaPackage.manifestUrl` are required. The `pwaPackage.serviceWorkerUrl` is optional, but recommended.
+
+These URLs must be absolute URLs to your PWA on the web. They cannot be relative URLs or links to files in your repo.
+
+## Releasing a new version of your PWA to the Microsoft Store
+
+To release a new version of your PWA to the Microsoft Store, create a new GitHub Release in your repo.
+
+As with all PWAs, the Microsoft Store will always run the latest version of your PWA on the web. 
+
+Creating a new release on GitHub will cause your app in the Microsoft Store to have an incremented version.
+
+</details>
+
+## Using repo-relative paths in `ms-store-publish.json`
+
+You can use relative paths in your `ms-store-publish.json` file that link to files inside your repo. For example, if your app's icon is stored in your repo at `/public/assets/app-icon.png`, you can link to it like this:
+
+```json
+{
+    "iconUrl": "/blob/main/public/assets/app-icon.png?raw=true"
+}
+```
+
+Note that for icons and other binary data, you should use the `?raw=true` query parameter to ensure that the image is served as raw content in order to be fetched by OctoStore.
+
+Icons should be square PNG images, ideally 512x512 pixels or larger.
 
 # Is this a Microsoft-sponsored project?
 
