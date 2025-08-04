@@ -122,7 +122,7 @@ Creating a new release on GitHub will cause your app in the Microsoft Store to h
 
 ## Releasing a new version of your app in the Microsoft Store
 
-To release a new version of your app to the Microsoft Store, use GitHub Releases to create a new release of your app on GitHub. OctoStore will automatically pick it up and publish that release to the Microsoft Store. The version in the Store will match the version on GitHub.
+To release a new version of your app to the Microsoft Store, use GitHub Releases to create a new release of your app. OctoStore will automatically pick it up and publish that release to the Microsoft Store. The version in the Store will match the version on GitHub.
 
 If your app is a Windows executable (`.exe`, `.appx`, `.appxbundle`, `.msi`, `.msix`, or `.msixbundle`), the GitHub Release should contain a link the x64 or ARM64 version of your executable, or both. 
 
