@@ -7,7 +7,7 @@ Add a single JSON file to your repository and your app will be published to the 
 
 All you need to do is include a file named `ms-store-publish.json` in your repo. Your app can be a Windows executable (`.exe`, `.appx`, or `.appxbundle`, `.msi`, `.msix`, `.msixbundle`) or a [Progressive Web App (PWA)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/What_is_a_progressive_web_app).
 
-<details><summary>Windows executables (`.exe`, `.appx`, or `.appxbundle`, `.msi`, `.msix`, `.msixbundle`)</summary>
+<details><summary>Windows executables</summary>
 
 To publish your Windows app to the Microsoft Store, add a `ms-store-publish.json` to your repo with a `windowsExecutablePackage` section linking to your GitHub Releases executable. [Example ms-store-publish.json](https://github.com/JudahGabriel/ambie/blob/main/ms-store-publish.json):
 
@@ -49,36 +49,6 @@ To publish your Windows app to the Microsoft Store, add a `ms-store-publish.json
     ]
 }
 ```
-
-## Releasing a new version of your Windows app to the Microsoft Store
-
-To release a new version of your Windows app to the Microsoft Store, create a new Release on GitHub. The GitHub Release should contain a link the x64 or ARM64 version of your executable, or both. 
-
-For example, you might create a new GitHub Release for your app with the following assets:
-
-- `MyApp_1.0.0_x64.exe`: with a link like https://github.com/MyUser/MyApp/releases/download/v1.0.0.0/MyApp_1.0.0_x64.exe
-- `MyApp_1.0.0_ARM64.exe`: with a link like https://github.com/MyUser/MyApp/releases/download/v1.0.0.0/MyApp_1.0.0_ARM64.exe
-
-Then in your `ms-store-publish.json` file, you would have the following:
-
-```json
-{
-    "windowsExecutablePackage": {
-        "gitHubReleasesX64FileName": "MyApp_{{version:3}}_x64.exe",
-        "gitHubReleasesArm64FileName": "MyApp_{{version:3}}_ARM64.exe"
-    }
-}
-```
-
-Note that these are file names, not absolute URLs, as OctoStore will automatically grab the latest version of your app from your repo's GitHub Releases.
-
-When adding your executable file name, you can use the `{{version}}` template to specify the version of your app.
-
-- {{version}}: "4.2.0.0"
-- {{version:3}}: "4.2.0"
-- {{version:2}}: "4.2"
-
-Your executable file should be an `.exe`, `.appx`, `.appxbundle`, `.msi`, `.msix`, or `.msixbundle`.
 
 </details>
 
@@ -150,6 +120,49 @@ Creating a new release on GitHub will cause your app in the Microsoft Store to h
 
 </details>
 
+## Releasing a new version of your app in the Microsoft Store
+
+## Releasing a new version of your Windows app to the Microsoft Store
+
+To release a new version of your app to the Microsoft Store, use GitHub Releases to create a new release of your app on GitHub. OctoStore will automatically pick it up and publish that release to the Microsoft Store. The version in the Store will match the version on GitHub.
+
+If your app is a Windows executable (`.exe`, `.appx`, or `.appxbundle`, `.msi`, `.msix`, `.msixbundle`), the GitHub Release should contain a link the x64 or ARM64 version of your executable, or both. 
+
+For example, you might create a new GitHub Release for your app with the following assets:
+
+- `MyApp_1.0.0_x64.exe`: with a link like `https://github.com/MyUser/MyApp/releases/download/v1.0.0.0/MyApp_1.0.0_x64.exe`
+- `MyApp_1.0.0_ARM64.exe`: with a link like `https://github.com/MyUser/MyApp/releases/download/v1.0.0.0/MyApp_1.0.0_ARM64.exe`
+
+Then in your `ms-store-publish.json` file, you would have the following:
+
+```json
+{
+    "windowsExecutablePackage": {
+        "gitHubReleasesX64FileName": "MyApp_{{version:3}}_x64.exe",
+        "gitHubReleasesArm64FileName": "MyApp_{{version:3}}_ARM64.exe"
+    }
+}
+```
+
+Note that these are file names, not absolute URLs, as OctoStore will automatically get the full URL from your app's latest GitHub Release.
+
+When adding your executable file name, you can use the `{{version}}` template to specify the version of your app.
+
+- {{version}}: "4.2.0.0"
+- {{version:3}}: "4.2.0"
+- {{version:2}}: "4.2"
+
+Your executable file should be an `.exe`, `.appx`, `.appxbundle`, `.msi`, `.msix`, or `.msixbundle`.
+
+If your app is a PWA, note that your app will always run the latest version of your PWA on the web. Creating a new release on GitHub for your PWA only serves to increment that version of your app in the Microsoft Store and optionally update your Store listing (e.g. with new icons, screenshots, what's new info, etc.)
+
+## Your app's release notes
+
+To update your app's release notes in the Microsoft Store, you can include a `whatsNew` field in your `ms-store-publish.json` file. This field should contain a string with the release notes for your app.
+
+Alternately, if you omit `whatsNew`, OctoStore will automatically use the release notes from your latest GitHub Release.
+
+
 ## Using repo-relative paths in `ms-store-publish.json`
 
 You can use relative paths in your `ms-store-publish.json` file that link to files inside your repo. For example, if your app's icon is stored in your repo at `/public/assets/app-icon.png`, you can link to it like this:
@@ -163,6 +176,7 @@ You can use relative paths in your `ms-store-publish.json` file that link to fil
 Note that for icons and other binary data, you should use the `?raw=true` query parameter to ensure that the image is served as raw content in order to be fetched by OctoStore.
 
 Icons should be square PNG images, ideally 512x512 pixels or larger.
+
 
 # Is this a Microsoft-sponsored project?
 
