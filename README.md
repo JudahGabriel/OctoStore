@@ -152,7 +152,7 @@ When adding your executable file name, you can use the `{{version}}` template to
 
 Your executable file should be an `.exe`, `.appx`, `.appxbundle`, `.msi`, `.msix`, or `.msixbundle`.
 
-If your app is a PWA, note that your app will always run the latest version of your PWA on the web. Creating a new release on GitHub for your PWA only serves to increment that version of your app in the Microsoft Store and optionally update your Store listing (e.g. with new icons, screenshots, what's new info, etc.)
+If your app is a PWA, note that your app in the Microsoft Store will always run the latest version of your PWA on the web. Creating a new release on GitHub for your PWA only serves to increment that version of your app in the Microsoft Store and optionally update your Store listing e.g. new icons, updated screenshots, what's new, etc.
 
 ## Your app's release notes
 
@@ -177,9 +177,47 @@ Note that for icons and other binary data, you should use the `?raw=true` query 
 
 Icons should be square PNG images, ideally 512x512 pixels or larger.
 
+## View your status page
 
-## Is this a Microsoft-sponsored project?
+Once you've added a `ms-store-publish.json` file to your repo, you can view the status of your app's submission to the Store at https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azurewebsites.net/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO, where YOUR_GITHUB_NAME/YOUR_REPO is Your GitHub name and repo, e.g. `JudahGabriel/ambie`.
+```
 
-This started as an individual hackathon idea within Microsoft. It has since been given official support as an experimental idea by the Microsoft Store team. 
 
-Our goal is to see if developers find it useful. Our gauge for determining usefulness is by submitting PRs to add `ms-store-publish.json` to Windows apps repos on GitHub.
+## Frequently Asked Questions
+
+<details>
+<summary>Is this an official Microsoft project?</summary>
+Yes. This started as an individual hackathon idea within Microsoft. It has since been given official support as an experimental idea by the Microsoft Store team.
+</details>
+
+<details>
+<summary>How does this work?</summary>
+OctoStore searches GitHub for `ms-store-publish.json` files in public repositories. When it finds one, it will begin publishing your app to the Microsof Store. The publisher of your app will appear as `Open Source Apps on GitHub`.
+</details>
+
+<details>
+<summary>How do I know if my app was published to the Microsoft Store?</summary>
+Go to https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azurewebsites.net/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO
+</details>
+
+<details>
+<summary>What happens if my app is rejected?</summary>
+Go to [your status page](https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azurewebsites.net/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO) and you'll see any rejection notice. Address any issues and create a new release on GitHub to publish to the Store again.
+</details>
+
+<details>
+<summary>Is there anything else I need to do besides adding `ms-store-publish.json`?</summary>
+If you haven't already, you will need to agree to the Microsoft App Developer Agreement. Go to [your status page](https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azurewebsites.net/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO) and you'll be prompted to approve the agreement. You only need to do this once per GitHub account.
+</details>
+
+<details>
+<summary>I already have a Partner Center account. Can I use that?</summary>
+No, not at this time. OctoStore is designed to make it easy to publish open source apps to the Microsoft Store without needing a Partner Center account. If you have a Partner Center account. If you already have a Partner Center account and app reservation, you should continue using that.
+
+You may be interested in the [Microsoft Store CLI](https://github.com/microsoft/msstore-cli) and corresponding [Microsoft Store CLI GitHub Action](https://marketplace.visualstudio.com/items?itemName=ms-aps-msstorecli.microsoft-store-developer-cli-task) that help you publish your app to the Microsoft Store using your existing Partner Center account.
+</details>
+
+<details>
+<summary>If I use this, can I eventually migrate to my own Partner Center account?</summary>
+Yes. Reach out to us juhimang @ microsoft to migrate.
+</details>
