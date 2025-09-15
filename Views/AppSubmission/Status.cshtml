@@ -403,6 +403,37 @@
                     </div>
                 </div>
             }
+            
+            @* Partner Center Feedback Comments *@
+            <wa-card style="margin-top: 2rem;">
+                <div slot="header">
+                    <h3 style="margin: 0;">Partner Center Feedback</h3>
+                </div>
+                
+                @if (Model.Comments.Any())
+                {
+                    <div style="space-y: 1rem;">
+                        @foreach (var comment in Model.Comments)
+                        {
+                            <div style="border-left: 4px solid var(--wa-color-primary-500); padding-left: 1rem; margin-bottom: 1.5rem; background-color: var(--wa-color-neutral-50); padding: 1rem; border-radius: 8px;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <wa-icon name="person-circle" style="color: var(--wa-color-primary-600);"></wa-icon>
+                                    <strong style="color: var(--wa-color-primary-700);">@comment.Author</strong>
+                                </div>
+                                <p style="margin: 0; color: var(--wa-color-neutral-800); line-height: 1.5;">@comment.Content</p>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div style="text-align: center; padding: 2rem; color: var(--wa-color-neutral-500);">
+                        <wa-icon name="chat-bubble-oval-left" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></wa-icon>
+                        <p style="margin: 0;">No feedback comments available yet.</p>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Comments from the Microsoft Partner Center review process will appear here.</p>
+                    </div>
+                }
+            </wa-card>
         }
     </div>
 </body>

@@ -65,6 +65,11 @@ namespace OctoStore.Models
         public string? StoreProductId { get; set; }
 
         /// <summary>
+        /// Partner Center feedback comments on the app submission.
+        /// </summary>
+        public List<Comment> Comments { get; set; } = new();
+
+        /// <summary>
         /// Gets the ID for an app submission based on the repository name.
         /// </summary>
         /// <param name="repoName">The full name of the repository on GitHub which includes both the owner's GitHub name and the repository name, e.g. "JudahGabriel/etzmitzvot"</param>
