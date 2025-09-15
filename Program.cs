@@ -29,13 +29,13 @@ builder.Services.AddAuthentication("Cookies")
     });
 
 // Add GitHub OAuth only if configured
-var appSettings = builder.Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
-if (!string.IsNullOrEmpty(appSettings?.GitHubClientId) && !string.IsNullOrEmpty(appSettings?.GitHubClientSecret))
+var gitHubSettings = builder.Configuration.GetSection(nameof(GitHubSettings)).Get<GitHubSettings>();
+if (!string.IsNullOrEmpty(gitHubSettings?.ClientId) && !string.IsNullOrEmpty(gitHubSettings?.ClientSecret))
 {
     builder.Services.AddAuthentication().AddOAuth("GitHub", options =>
     {
-        options.ClientId = appSettings.GitHubClientId;
-        options.ClientSecret = appSettings.GitHubClientSecret;
+        options.ClientId = gitHubSettings.ClientId;
+        options.ClientSecret = gitHubSettings.ClientSecret;
         options.CallbackPath = "/auth/github-callback";
         
         options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
