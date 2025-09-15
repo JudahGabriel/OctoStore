@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>OctoStore - Publish your GitHub apps to the Microsoft Store</title>
+    <base href="/" />
+
+    <meta name="description" content="Automatically publish your open source GitHub apps to the Microsoft Store">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.3/dist/styles/webawesome.css" />
+    <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.3/dist/webawesome.loader.js"></script>
+    
+    <style>
+        body {
+            font-family: var(--wa-font-sans);
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 25%, #ddeeff 50%, #d4e9ff 75%, #cce4ff 100%);
+            min-height: 100vh;
+            color: var(--wa-color-neutral-900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--wa-color-primary-600);
+            margin-bottom: 1rem;
+        }
+        
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--wa-color-neutral-600);
+            margin-bottom: 3rem;
+        }
+        
+        .login-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: var(--wa-color-primary-600);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .login-btn:hover {
+            background: var(--wa-color-primary-700);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .features {
+            margin-top: 4rem;
+            text-align: left;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--wa-color-primary-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--wa-color-primary-600);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="logo">🐙 OctoStore</h1>
+        <p class="tagline">
+            Automatically publish your open source GitHub apps to the Microsoft Store
+        </p>
+        
+        <a href="/auth/login" class="login-btn">
+            <wa-icon name="github" style="font-size: 1.5rem;"></wa-icon>
+            Sign in with GitHub
+        </a>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">
+                    <wa-icon name="zap"></wa-icon>
+                </div>
+                <div>
+                    <strong>Automatic Publishing</strong><br>
+                    <span style="color: var(--wa-color-neutral-600);">Just add a ms-store-publish.json file to your repository</span>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">
+                    <wa-icon name="shield-check"></wa-icon>
+                </div>
+                <div>
+                    <strong>Secure & Trusted</strong><br>
+                    <span style="color: var(--wa-color-neutral-600);">OAuth authentication with your GitHub account</span>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">
+                    <wa-icon name="eye"></wa-icon>
+                </div>
+                <div>
+                    <strong>Track Status</strong><br>
+                    <span style="color: var(--wa-color-neutral-600);">Monitor all your app submissions in one dashboard</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
