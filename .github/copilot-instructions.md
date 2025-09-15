@@ -23,11 +23,11 @@ Always reference these instructions first and fallback to search or bash command
 - Run locally: `dotnet run --configuration Release`
 - Without proper configuration, the application will fail with: "Unable to find Raven cert base64 string in configuration"
 - Required configuration (stored in user secrets or environment variables):
-  - `RavenSettings:CertBase64` - Base64 encoded RavenDB certificate
-  - `RavenSettings:CertPassword` - RavenDB certificate password  
-  - `RavenSettings:Urls` - RavenDB connection URLs
-  - `RavenSettings:DatabaseName` - RavenDB database name
-  - `AppSettings:GitHubToken` - GitHub API token for repository scanning
+  - `RavenSettings:CertBase64` - Base64 encoded RavenDB certificate. This value is stored in the repo's secrets as `RAVENSETTINGS_CERTBASE64`
+  - `RavenSettings:CertPassword` - RavenDB certificate password. This value is stored in the repo's secrets as `RAVENSETTINGS_CERTPASSWORD`
+  - `RavenSettings:Urls` - RavenDB connection URLs. This value should be an array. It is stored in the repo's secrets as `RAVENSETTINGS_URLS` as a comma-separated value, e.g. `https://example.com/1, https://example.com/2, https://example.com/3
+  - `RavenSettings:DatabaseName` - RavenDB database name. This value is stored in the repo's secrets as `RAVENSETTINGS_DATABASENAME`
+  - `AppSettings:GitHubToken` - GitHub API token for repository scanning. This value is stored in the repo's secrets as `APPSETTINGS_GITHUBTOKEN`
 - Default URLs when running: HTTP at http://localhost:5131, HTTPS at https://localhost:7280
 
 ### Validation
