@@ -114,6 +114,39 @@ These URLs must be absolute URLs to your PWA on the web. They cannot be relative
 
 </details>
 
+## Category
+
+Your ms-store-publish.json should have a category. It must be one of the following:
+
+<details>
+<summary>List of supported categories</summary>
+- BooksAndReference,
+- Business,
+- DeveloperTools,
+- Education,
+- Entertainment,
+- FoodDining,
+- GovernmentAndPolitics,
+- HealthFitness,
+- KidsAndFamily,
+- Lifestyle,
+- Medical,
+- MultimediaDesign,
+- Music,
+- NavigationAndMaps,
+- NewsAndWeather,
+- PersonalFinance,
+- Personalization,
+- PhotoVideo,
+- Productivity,
+- Security,
+- Shopping,
+- Social,
+- Sports,
+- Travel,
+- UtilitiesAndTools
+</details>
+
 ## Releasing a new version of your app in the Microsoft Store
 
 To release a new version of your app to the Microsoft Store, use GitHub Releases to create a new release of your app. OctoStore will automatically pick it up and publish that release to the Microsoft Store. The version in the Store will match the version on GitHub.
@@ -155,7 +188,6 @@ To update your app's release notes in the Microsoft Store, you can include a `wh
 The `whatsNew` field can also be a link that contains the release notes. It can be an absolute URL or a relative URL to a file in your repo.
 
 Alternately, if you omit `whatsNew`, OctoStore will automatically use the release notes from your latest GitHub Release.
-
 
 ## Using repo-relative paths in `ms-store-publish.json`
 
