@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.42.0" />
     <PackageReference Include="Octokit" Version="14.0.0" />
     <PackageReference Include="RavenDB.Client" Version="7.1.1" />
     <PackageReference Include="RavenDB.DependencyInjection" Version="5.0.1" />
