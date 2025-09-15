@@ -53,11 +53,13 @@ public class AppSubmissionController : Controller
             
             // Get app submissions for each repository
             var dashboardData = new List<DashboardRepositoryInfo>();
-            
+
+            var submissionIds = repos.Select(r => AppSubmission.GetIdFromRepositoryName(r.FullName));
+            var submissionsMap = await dbSession.LoadAsync<AppSubmission?>(submissionIds);
             foreach (var repo in repos)
             {
                 var submissionId = AppSubmission.GetIdFromRepositoryName(repo.FullName);
-                var submission = await dbSession.LoadAsync<AppSubmission>(submissionId);
+                var submission = submissionsMap[submissionId];
                 
                 // Check if the repository has ms-store-publish.json
                 var hasManifest = submission?.Manifest != null;

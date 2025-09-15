@@ -65,6 +65,10 @@
             border-radius: 50%;
             object-fit: cover;
         }
+
+        .login-btn {
+            color: white;
+        }
         
         .logout-btn {
             color: var(--wa-color-neutral-600);
@@ -225,10 +229,11 @@
             <div class="repo-grid">
                 @foreach (var repoInfo in Model)
                 {
+                    var url = repoInfo.AppSubmission != null ? "/appsubmission/status?repo=" + repoInfo.AppSubmission.Id.Replace("AppSubmissions/", string.Empty) : repoInfo.Repository.HtmlUrl;
                     <div class="repo-card @(repoInfo.HasManifest ? "has-manifest" : "")">
                         <div class="repo-header">
                             <h3 class="repo-name">
-                                <a href="@repoInfo.Repository.HtmlUrl" target="_blank">
+                                <a href="@url" target="_blank">
                                     @repoInfo.Repository.Name
                                 </a>
                             </h3>

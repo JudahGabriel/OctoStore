@@ -36,35 +36,16 @@
             font-weight: 800;
             color: var(--wa-color-primary-600);
             margin-bottom: 1rem;
+
+            img {
+                max-width: 200px;
+            }
         }
         
         .tagline {
             font-size: 1.25rem;
             color: var(--wa-color-neutral-600);
             margin-bottom: 3rem;
-        }
-        
-        .login-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem 2rem;
-            background: var(--wa-color-primary-600);
-            color: white;
-            text-decoration: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: all 0.2s;
-            border: none;
-        }
-        
-        .login-btn:hover {
-            background: var(--wa-color-primary-700);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-            color: white;
-            text-decoration: none;
         }
         
         .features {
@@ -84,6 +65,7 @@
         
         .feature-icon {
             width: 48px;
+            min-width: 48px;
             height: 48px;
             background: var(--wa-color-primary-100);
             border-radius: 50%;
@@ -97,15 +79,16 @@
 
 <body>
     <div class="container">
-        <h1 class="logo">🐙 OctoStore</h1>
+        <h1 class="logo"><img src="/icons/octo-store.png" /></h1>
+
         <p class="tagline">
-            Automatically publish your open source GitHub apps to the Microsoft Store
+            Publish your open source apps to the Microsoft Store by adding a single file to your repo.
         </p>
         
-        <a href="/auth/login" class="login-btn">
-            <wa-icon name="github" style="font-size: 1.5rem;"></wa-icon>
+        <wa-button href="/auth/login" class="login-btn">
+            <wa-icon name="github" slot="start" family="brands"></wa-icon>
             Sign in with GitHub
-        </a>
+        </wa-button>
         
         <div class="features">
             <div class="feature">
@@ -114,17 +97,17 @@
                 </div>
                 <div>
                     <strong>Automatic Publishing</strong><br>
-                    <span style="color: var(--wa-color-neutral-600);">Just add a ms-store-publish.json file to your repository</span>
+                    <span style="color: var(--wa-color-neutral-600);">Just add a ms-store-publish.json file to your repository. We'll automatically publish your app to the Microsoft Store, making your app discoverable to the millions of Microsoft Store users. <a href="https://github.com/JudahGabriel/OctoStore/tree/main?tab=readme-ov-file#how-to-publish-my-app-to-the-microsoft-store" target="_blank">Read more...</a></span>
                 </div>
             </div>
             
             <div class="feature">
                 <div class="feature-icon">
-                    <wa-icon name="shield-check"></wa-icon>
+                    <wa-icon name="shield-halved" family="classic"></wa-icon>
                 </div>
                 <div>
                     <strong>Secure & Trusted</strong><br>
-                    <span style="color: var(--wa-color-neutral-600);">OAuth authentication with your GitHub account</span>
+                    <span style="color: var(--wa-color-neutral-600);">Microsoft manages the publishing of your app in the Store under the <strong>Open Source Apps on GitHub</strong> publisher.</span>
                 </div>
             </div>
             
@@ -134,7 +117,17 @@
                 </div>
                 <div>
                     <strong>Track Status</strong><br>
-                    <span style="color: var(--wa-color-neutral-600);">Monitor all your app submissions in one dashboard</span>
+                    <span style="color: var(--wa-color-neutral-600);">Monitor all your app submissions to the Microsoft Store in one dashboard. </span>
+                </div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">
+                    <wa-icon name="windows" family="brands"></wa-icon>
+                </div>
+                <div>
+                    <strong>Native and Web</strong><br>
+                    <span style="color: var(--wa-color-neutral-600);">It doesn't matter if your app is Win32, PWA, UWP, MSIX, you name it. OctoStore can publish your app to the Store.</span>
                 </div>
             </div>
         </div>
