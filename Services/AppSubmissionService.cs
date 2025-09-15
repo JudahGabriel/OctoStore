@@ -120,12 +120,60 @@ public class AppSubmissionService
                 return new Either<StorePublishManifest, string>("Failed to deserialize manifest content.");
             }
 
+            // Auto-populate "What's New" from release notes for English listings if not provided
+            await AutoPopulateWhatsNewFromReleaseNotes(manifest, file.Repository);
+
             return new Either<StorePublishManifest, string>(manifest);
         }
         catch (Exception deserializeError)
         {
             logger.LogError(deserializeError, "Failed to deserialize manifest content from {url}.", file.HtmlUrl);
             return new Either<StorePublishManifest, string>(deserializeError.Message);
+        }
+    }
+
+    /// <summary>
+    /// Auto-populates the "What's New" field for English store listings when not provided,
+    /// using the release notes from the latest GitHub release.
+    /// </summary>
+    /// <param name="manifest">The store publish manifest to potentially modify.</param>
+    /// <param name="repository">The GitHub repository to get release notes from.</param>
+    private async Task AutoPopulateWhatsNewFromReleaseNotes(StorePublishManifest manifest, Repository repository)
+    {
+        try
+        {
+            // Find English store listings that don't have WhatsNew populated
+            var englishListingsWithoutWhatsNew = manifest.StoreListings
+                .Where(listing => string.Equals(listing.Language, "en", StringComparison.OrdinalIgnoreCase) 
+                                 && string.IsNullOrWhiteSpace(listing.WhatsNew))
+                .ToList();
+
+            if (!englishListingsWithoutWhatsNew.Any())
+            {
+                logger.LogDebug("No English store listings need WhatsNew auto-population for repository {repo}", repository.FullName);
+                return;
+            }
+
+            // Get the latest release from GitHub
+            var latestRelease = await gitHub.TryGetLatestRelease(repository);
+            
+            if (latestRelease == null || string.IsNullOrWhiteSpace(latestRelease.Body))
+            {
+                logger.LogDebug("No release notes found for repository {repo} to auto-populate WhatsNew", repository.FullName);
+                return;
+            }
+
+            // Auto-populate WhatsNew for English listings
+            foreach (var listing in englishListingsWithoutWhatsNew)
+            {
+                listing.WhatsNew = latestRelease.Body;
+                logger.LogInformation("Auto-populated WhatsNew for English listing in repository {repo} from release {releaseTag}", 
+                    repository.FullName, latestRelease.TagName);
+            }
+        }
+        catch (Exception error)
+        {
+            logger.LogWarning(error, "Failed to auto-populate WhatsNew from release notes for repository {repo}. Continuing with existing manifest.", repository.FullName);
         }
     }
 }
