@@ -8,17 +8,17 @@ namespace OctoStore.Controllers;
 [Route("[controller]")]
 public class AuthController : Controller
 {
-    private readonly AppSettings _appSettings;
+    private readonly GitHubSettings gitHubSettings;
 
-    public AuthController(IOptions<AppSettings> appSettings)
+    public AuthController(IOptions<GitHubSettings> appSettings)
     {
-        _appSettings = appSettings.Value;
+        gitHubSettings = appSettings.Value;
     }
 
     [HttpGet("login")]
     public IActionResult Login()
     {
-        if (string.IsNullOrEmpty(_appSettings.GitHubClientId) || string.IsNullOrEmpty(_appSettings.GitHubClientSecret))
+        if (string.IsNullOrEmpty(gitHubSettings.ClientId) || string.IsNullOrEmpty(gitHubSettings.ClientSecret))
         {
             return View("OAuthNotConfigured");
         }
