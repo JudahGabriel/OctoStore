@@ -100,6 +100,70 @@
             text-decoration: underline;
         }
         
+        .partner-feedback-card {
+            margin-top: 2rem;
+        }
+        
+        .partner-feedback-header {
+            margin: 0;
+        }
+        
+        .partner-feedback-comments {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .partner-feedback-comment {
+            border-left: 4px solid var(--wa-color-primary-500);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            background-color: var(--wa-color-neutral-100);
+            border-radius: 8px;
+        }
+        
+        .partner-feedback-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .partner-feedback-author-icon {
+            color: var(--wa-color-primary-600);
+        }
+        
+        .partner-feedback-author-name {
+            color: var(--wa-color-primary-700);
+        }
+        
+        .partner-feedback-content {
+            margin: 0;
+            color: var(--wa-color-neutral-800);
+            line-height: 1.5;
+        }
+        
+        .partner-feedback-empty {
+            text-align: center;
+            padding: 2rem;
+            color: var(--wa-color-neutral-500);
+        }
+        
+        .partner-feedback-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .partner-feedback-empty-text {
+            margin: 0;
+        }
+        
+        .partner-feedback-empty-subtext {
+            margin: 0.5rem 0 0 0;
+            font-size: 0.9rem;
+        }
+
         @@media (max-width: 768px) {
             .content-grid {
                 grid-template-columns: 1fr;
@@ -405,32 +469,32 @@
             }
             
             @* Partner Center Feedback Comments *@
-            <wa-card style="margin-top: 2rem;">
+            <wa-card class="partner-feedback-card">
                 <div slot="header">
-                    <h3 style="margin: 0;">Partner Center Feedback</h3>
+                    <h3 class="partner-feedback-header">Partner Center Feedback</h3>
                 </div>
                 
                 @if (Model.Comments.Any())
                 {
-                    <div style="space-y: 1rem;">
+                    <div class="partner-feedback-comments">
                         @foreach (var comment in Model.Comments)
                         {
-                            <div style="border-left: 4px solid var(--wa-color-primary-500); padding-left: 1rem; margin-bottom: 1.5rem; background-color: var(--wa-color-neutral-50); padding: 1rem; border-radius: 8px;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                    <wa-icon name="person-circle" style="color: var(--wa-color-primary-600);"></wa-icon>
-                                    <strong style="color: var(--wa-color-primary-700);">@comment.Author</strong>
+                            <div class="partner-feedback-comment">
+                                <div class="partner-feedback-author">
+                                    <wa-icon name="person-circle" class="partner-feedback-author-icon"></wa-icon>
+                                    <strong class="partner-feedback-author-name">@comment.Author</strong>
                                 </div>
-                                <p style="margin: 0; color: var(--wa-color-neutral-800); line-height: 1.5;">@comment.Content</p>
+                                <p class="partner-feedback-content">@comment.Content</p>
                             </div>
                         }
                     </div>
                 }
                 else
                 {
-                    <div style="text-align: center; padding: 2rem; color: var(--wa-color-neutral-500);">
-                        <wa-icon name="chat-bubble-oval-left" style="font-size: 3rem; margin-bottom: 1rem; display: block;"></wa-icon>
-                        <p style="margin: 0;">No feedback comments available yet.</p>
-                        <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Comments from the Microsoft Partner Center review process will appear here.</p>
+                    <div class="partner-feedback-empty">
+                        <wa-icon name="chat-bubble-oval-left" class="partner-feedback-empty-icon"></wa-icon>
+                        <p class="partner-feedback-empty-text">No feedback comments available yet.</p>
+                        <p class="partner-feedback-empty-subtext">Comments from the Microsoft Partner Center review process will appear here.</p>
                     </div>
                 }
             </wa-card>

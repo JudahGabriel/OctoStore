@@ -30,7 +30,7 @@ builder.Services.AddRavenDbDocStore(o =>
         throw new InvalidOperationException("Unable to find Raven cert password in configuration. This is stored in VS user secrets, Azure web app env vars, and LP.");
     }
     var certBytes = Convert.FromBase64String(certBase64);
-    o.Certificate = new X509Certificate2(certBytes, certPassword);
+    o.Certificate = X509CertificateLoader.LoadPkcs12(certBytes, certPassword);
 
     // Also, ignore self-referencing loops for Raven logging
     o.BeforeInitializeDocStore = docStore => docStore.IgnoreSelfReferencingLoops();
