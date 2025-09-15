@@ -32,6 +32,12 @@ public enum AppSubmissionStatus
     AwaitingReview,
 
     /// <summary>
+    /// The app submission has been reviewed by Partner Center and is awaiting changes or feedback from the developer.
+    /// </summary>
+    [Description("Changes requested, see comments")]
+    ChangesRequested,
+
+    /// <summary>
     /// The app submission has been published to the Microsoft Store. The app submission will have a StoreProductId assigned to it.
     /// </summary>
     [Description("Published")]

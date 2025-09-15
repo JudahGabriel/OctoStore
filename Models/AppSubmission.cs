@@ -67,7 +67,7 @@ namespace OctoStore.Models
         /// <summary>
         /// Partner Center feedback comments on the app submission.
         /// </summary>
-        public List<Comment> Comments { get; set; } = new();
+        public List<Comment> Comments { get; set; } = [];
 
         /// <summary>
         /// Gets the ID for an app submission based on the repository name.

@@ -14,5 +14,10 @@ namespace OctoStore.Models
         /// The content/text of the comment.
         /// </summary>
         public required string Content { get; set; }
+
+        /// <summary>
+        /// The created date of the comment.
+        /// </summary>
+        public DateTimeOffset Created { get; set; }
     }
 }
