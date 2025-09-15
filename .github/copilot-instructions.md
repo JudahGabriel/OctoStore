@@ -1,6 +1,6 @@
 # OctoStore
 
-OctoStore is an ASP.NET Core web service that automatically publishes open source apps from GitHub repositories to the Microsoft Store. The service scans GitHub for `ms-store-publish.json` manifest files and creates Microsoft Store submissions for both Windows executables and Progressive Web Apps (PWAs).
+OctoStore is an ASP.NET Core web service that automatically publishes open source Windows apps from GitHub repositories to the Microsoft Store. The service scans GitHub for `ms-store-publish.json` manifest files and creates Microsoft Store submissions for both Windows executables and Progressive Web Apps (PWAs).
 
 Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.
 
@@ -19,7 +19,7 @@ Always reference these instructions first and fallback to search or bash command
 - All build commands show a vulnerability warning for System.Text.Encodings.Web 4.5.0 - this is expected and can be ignored
 
 ### Running the Application
-- **CRITICAL**: The application requires RavenDB credentials to start successfully
+- **CRITICAL**: The application requires RavenDB credentials to start successfully. These credentials are stored in the secrets of this GitHub repo.
 - Run locally: `dotnet run --configuration Release`
 - Without proper configuration, the application will fail with: "Unable to find Raven cert base64 string in configuration"
 - Required configuration (stored in user secrets or environment variables):
