@@ -119,7 +119,9 @@ These URLs must be absolute URLs to your PWA on the web. They cannot be relative
 Your ms-store-publish.json should have a category. It must be one of the following:
 
 <details>
+    
 <summary>List of supported categories</summary>
+
 - BooksAndReference,
 - Business,
 - DeveloperTools,
@@ -145,6 +147,7 @@ Your ms-store-publish.json should have a category. It must be one of the followi
 - Sports,
 - Travel,
 - UtilitiesAndTools
+  
 </details>
 
 ## Releasing a new version of your app in the Microsoft Store
