@@ -403,7 +403,7 @@
                                 @if (!string.IsNullOrEmpty(primaryListing.WhatsNew))
                                 {
                                     <p><strong>What's New:</strong></p>
-                                    <div class="whats-new-content" style="margin-bottom: 1rem;">@MarkdownHelper.ToHtml(primaryListing.WhatsNew)</div>
+                                    <wa-card class="card-basic whats-new-content" style="margin-bottom: 1rem;">@MarkdownHelper.ToHtml(primaryListing.WhatsNew)</wa-card>
                                 }
                                 
                                 @if (primaryListing.Features?.Any() == true)
