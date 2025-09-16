@@ -208,7 +208,7 @@ Icons should be square PNG images, ideally 512x512 pixels or larger.
 
 ## View your status page
 
-Once you've added a `ms-store-publish.json` file to your repo, you can view the status of your app's submission to the Store at https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azurewebsites.net/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO, where YOUR_GITHUB_NAME/YOUR_REPO is Your GitHub name and repo, e.g. `JudahGabriel/ambie`.
+Once you've added a `ms-store-publish.json` file to your repo, you can view the status of your app's submission to the Store at https://ms-octo.store/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO, where YOUR_GITHUB_NAME/YOUR_REPO is Your GitHub name and repo, e.g. `JudahGabriel/ambie`.
 
 ## Frequently Asked Questions
 
@@ -229,14 +229,14 @@ OctoStore searches GitHub for `ms-store-publish.json` files in public repositori
 <details>
 
 <summary>How do I know if my app was published to the Microsoft Store?</summary>
-Go to https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azurewebsites.net/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO
+Go to https://ms-octo.store/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO
 </details>
 
 <details>
 
 <summary>What happens if my app is rejected?</summary>
 
-Go to [your status page](https://octostore-b3c3a6aghnapgkfu.canadacentral-01.azurewebsites.net/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO) and you'll see any rejection notice. Address any issues and create a new release on GitHub to publish to the Store again.
+Go to [your status page](https://ms-octo.store/appsubmission/status?repo=YOUR_GITHUB_NAME/YOUR_REPO) and you'll see any rejection notice. Address any issues and create a new release on GitHub to publish to the Store again.
 </details>
 
 <details>
