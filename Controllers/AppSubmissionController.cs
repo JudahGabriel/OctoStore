@@ -31,7 +31,7 @@ public class AppSubmissionController : Controller
         // Ensure the logged in GitHub user is the owner of this repo, or is an admin of OctoStore.
         var repoAuthor = appsSubmissionForRepo?.RepositoryUserName;
         var loggedInUser = User.Identity?.Name;
-        var isAuthorized = appsSubmissionForRepo == null || string.Equals(repoAuthor, loggedInUser, StringComparison.OrdinalIgnoreCase) || loggedInUser == "JudahGabriel";
+        var isAuthorized = appsSubmissionForRepo == null || appsSubmissionForRepo.IsAuthorized(User.Identity?.Name);
         if (!isAuthorized)
         {
             // User is not the owner of the app submission
@@ -117,6 +117,41 @@ public class AppSubmissionController : Controller
         await dbSession.StoreAsync(repoScanRequest, $"RepositoryScanRequests/{owner}/{repoName}");
         await dbSession.SaveChangesAsync();
         return Ok("Scan requested");
+    }
+
+    /// <summary>
+    /// Marks the developer agreement as confirmed for a given repository's app submission.
+    /// </summary>
+    [HttpPost("confirmDeveloperAgreement")]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ConfirmDeveloperAgreement([FromForm] string repo, [FromServices] IAsyncDocumentSession dbSession)
+    {
+        if (string.IsNullOrWhiteSpace(repo))
+        {
+            return BadRequest("Repository is required.");
+        }
+
+        var id = AppSubmission.GetIdFromRepositoryName(repo);
+        var submission = await dbSession.LoadAsync<AppSubmission>(id);
+        if (submission is null)
+        {
+            return NotFound();
+        }
+
+        // Ensure the logged in GitHub user is authorized to do this.
+        if (!submission.IsAuthorized(User.Identity?.Name))
+        {
+            return Unauthorized();
+        }
+
+        if (!submission.ConfirmedAppDeveloperAgreement)
+        {
+            submission.ConfirmedAppDeveloperAgreement = true;
+            await dbSession.SaveChangesAsync();
+        }
+
+        return RedirectToAction(nameof(Status), new { repo });
     }
 
     //[HttpGet("getAll")]

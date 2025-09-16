@@ -108,5 +108,15 @@ namespace OctoStore.Models
 
             return LatestGitHubReleaseDate is null || LatestGitHubReleaseDate < latestRelease.PublishedAt;
         }
+
+        /// <summary>
+        /// Checks whether the specified user is authorized to view or manage this app submission.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns>True if the user is the owner of the repo or is an OctoStore admin.</returns>
+        public bool IsAuthorized(string? user)
+        {
+            return string.Equals(RepositoryUserName, user, StringComparison.OrdinalIgnoreCase) || user == "JudahGabriel";
+        }
     }
 }

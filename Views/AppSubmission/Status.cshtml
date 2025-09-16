@@ -355,22 +355,33 @@
                             <dt><strong>Latest GitHub Release:</strong></dt>
                             <dd style="margin-bottom: 1rem;">@Model.LatestGitHubReleaseDate.Value.ToString("MMM dd, yyyy 'at' HH:mm UTC")</dd>
                         }
-                        
-                        <dt><strong>Developer Agreement:</strong></dt>
+
+                        <dt>
+                            <a href="https://docs.microsoft.com/legal/windows/agreements/app-developer-agreement" target="_blank">
+                                <strong>Microsoft App Developer Agreement</strong>
+                            </a>        
+                        </dt>
+                       
                         <dd style="margin-bottom: 1rem;">
                             @if (Model.ConfirmedAppDeveloperAgreement)
                             {
                                 <wa-badge variant="success">
                                     <wa-icon name="check" style="margin-right: 0.25rem;"></wa-icon>
-                                    Signed
+                                    Agreed
                                 </wa-badge>
                             }
                             else
                             {
-                                <wa-badge variant="warning">
+                                <wa-badge variant="warning" style="margin-right:0.5rem;">
                                     <wa-icon name="clock" style="margin-right: 0.25rem;"></wa-icon>
-                                    Pending
+                                    Pending 
                                 </wa-badge>
+                                <br />
+                                <form method="post" action="appSubmission/confirmDeveloperAgreement" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="repo" value="@Model.Id.Replace("AppSubmissions/", string.Empty)" />
+                                    <wa-button variant="primary" size="small" type="submit">Agree</wa-button>
+                                </form>
                             }
                         </dd>
                         
