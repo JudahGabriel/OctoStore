@@ -29,8 +29,7 @@ public class AppSubmissionController : Controller
         var appsSubmissionForRepo = await dbSession.LoadAsync<AppSubmission>(AppSubmission.GetIdFromRepositoryName(repo));
 
         // Ensure the logged in GitHub user is the owner of this repo, or is an admin of OctoStore.
-        var repoAuthor = appsSubmissionForRepo?.RepositoryUserName;
-        var loggedInUser = User.Identity?.Name;
+
         var isAuthorized = appsSubmissionForRepo == null || appsSubmissionForRepo.IsAuthorized(User.Identity?.Name);
         if (!isAuthorized)
         {
