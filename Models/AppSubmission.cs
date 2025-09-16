@@ -39,6 +39,11 @@ namespace OctoStore.Models
         public required Uri RepositoryUrl { get; set; }
 
         /// <summary>
+        /// Gets the GitHub user name of the owner of the repository.
+        /// </summary>
+        public required string RepositoryUserName { get; set; }
+
+        /// <summary>
         /// The status of the app submission.
         /// </summary>
         public required AppSubmissionStatus Status { get; set; }

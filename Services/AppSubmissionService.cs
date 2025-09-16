@@ -57,7 +57,8 @@ public class AppSubmissionService
                 Id = submissionId,
                 ManifestSha = file.Sha,
                 ManifestUrl = new Uri(file.HtmlUrl),
-                RepositoryUrl = new Uri(file.Repository.Url),
+                RepositoryUrl = new Uri(file.Repository.HtmlUrl),
+                RepositoryUserName = file.Repository.Owner?.Name ?? string.Empty,
                 SubmissionDate = DateTimeOffset.UtcNow,
                 LatestGitHubReleaseDate = latestReleaseOnGitHub?.PublishedAt,
                 Status = AppSubmissionStatus.Scanning
