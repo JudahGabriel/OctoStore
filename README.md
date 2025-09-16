@@ -1,4 +1,6 @@
 # OctoStore
+<img width="100" height="100" alt="image" src="https://github.com/user-attachments/assets/85e72cc5-5a1a-430a-95af-017773816638" />
+
 OctoStore lets you publish your open source app to the Microsoft Store without leaving your GitHub repo.
 
 Add a single JSON file to your repository and your app will be published to the Microsoft Store, the app store on Windows, free of charge, under the `Open Source Apps on GitHub` publisher.
