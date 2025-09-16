@@ -27,6 +27,17 @@ public class AppSubmissionController : Controller
     public async Task<IActionResult> Status([FromQuery]string repo, [FromServices] IAsyncDocumentSession dbSession)
     {
         var appsSubmissionForRepo = await dbSession.LoadAsync<AppSubmission>(AppSubmission.GetIdFromRepositoryName(repo));
+
+        // Ensure the logged in GitHub user is the owner of this repo, or is an admin of OctoStore.
+        var repoAuthor = appsSubmissionForRepo?.RepositoryUserName;
+        var loggedInUser = User.Identity?.Name;
+        var isAuthorized = appsSubmissionForRepo == null || string.Equals(repoAuthor, loggedInUser, StringComparison.OrdinalIgnoreCase) || loggedInUser == "JudahGabriel";
+        if (!isAuthorized)
+        {
+            // User is not the owner of the app submission
+            return Unauthorized();
+        }
+
         return View("status", appsSubmissionForRepo);
     }
 
