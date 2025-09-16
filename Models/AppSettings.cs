@@ -1,7 +1,9 @@
 ﻿namespace OctoStore.Models
 {
-    public class AppSettings
+    public class GitHubSettings
     {
-        public string? GitHubToken { get; set; }
+        public string? Token { get; set; }
+        public string? ClientId { get; set; }
+        public string? ClientSecret { get; set; }
     }
 }

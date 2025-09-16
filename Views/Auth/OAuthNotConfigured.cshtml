@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>OAuth Not Configured - OctoStore</title>
+    <base href="/" />
+
+    <meta name="description" content="OAuth configuration required">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.3/dist/styles/webawesome.css" />
+    <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.3/dist/webawesome.loader.js"></script>
+    
+    <style>
+        body {
+            font-family: var(--wa-font-sans);
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 25%, #ddeeff 50%, #d4e9ff 75%, #cce4ff 100%);
+            min-height: 100vh;
+            color: var(--wa-color-neutral-900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .alert {
+            background: var(--wa-color-warning-50);
+            border: 2px solid var(--wa-color-warning-200);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .alert-icon {
+            font-size: 3rem;
+            color: var(--wa-color-warning-600);
+            margin-bottom: 1rem;
+        }
+        
+        .alert-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--wa-color-warning-800);
+            margin-bottom: 1rem;
+        }
+        
+        .alert-message {
+            color: var(--wa-color-warning-700);
+            line-height: 1.6;
+        }
+        
+        code {
+            background: var(--wa-color-neutral-100);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--wa-color-primary-600);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .back-btn:hover {
+            background: var(--wa-color-primary-700);
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="alert">
+            <div class="alert-icon">⚙️</div>
+            <h2 class="alert-title">OAuth Configuration Required</h2>
+            <div class="alert-message">
+                <p>GitHub OAuth authentication is not configured for this instance of OctoStore.</p>
+                <p>To enable authentication, the administrator needs to:</p>
+                <ol style="text-align: left; margin: 1rem 0;">
+                    <li>Create a GitHub OAuth App</li>
+                    <li>Set the <code>AppSettings:GitHubClientId</code> configuration</li>
+                    <li>Set the <code>AppSettings:GitHubClientSecret</code> configuration</li>
+                </ol>
+                <p>Please contact the system administrator to enable authentication.</p>
+            </div>
+        </div>
+        
+        <a href="/" class="back-btn">
+            <wa-icon name="arrow-left"></wa-icon>
+            Back to Home
+        </a>
+    </div>
+</body>
+</html>

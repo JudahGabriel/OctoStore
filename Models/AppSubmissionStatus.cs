@@ -8,6 +8,12 @@ namespace OctoStore.Models;
 public enum AppSubmissionStatus
 {
     /// <summary>
+    /// A PR has been submitted to the repository containing the ms-store-publish.json file. If the PR is approved, the app will begin to be published to the Store.
+    /// </summary>
+    [Description("Pull request submitted, awaiting merge.")]
+    PrSubmitted,
+
+    /// <summary>
     /// The repository is being scanned for the ms-store-publish.json file.
     /// </summary>
     [Description("Scanning the repository for ms-store-publish.json")]

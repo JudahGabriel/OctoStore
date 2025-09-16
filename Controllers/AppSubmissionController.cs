@@ -3,6 +3,9 @@ using OctoStore.Models;
 using OctoStore.Services;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Session;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Octokit;
 
 namespace OctoStore.Controllers;
 
@@ -20,10 +23,68 @@ public class AppSubmissionController : Controller
     }
 
     [HttpGet("status")]
+    [Authorize]
     public async Task<IActionResult> Status([FromQuery]string repo, [FromServices] IAsyncDocumentSession dbSession)
     {
         var appsSubmissionForRepo = await dbSession.LoadAsync<AppSubmission>(AppSubmission.GetIdFromRepositoryName(repo));
         return View("status", appsSubmissionForRepo);
+    }
+
+    [HttpGet("dashboard")]
+    [Authorize]
+    public async Task<IActionResult> Dashboard([FromServices] IAsyncDocumentSession dbSession)
+    {
+        var accessToken = HttpContext.User.FindFirst("access_token")?.Value;
+        if (string.IsNullOrEmpty(accessToken))
+        {
+            return Challenge("GitHub");
+        }
+
+        // Create a GitHub client with the user's access token
+        var userGitHubClient = new GitHubClient(new ProductHeaderValue("OctoStore"))
+        {
+            Credentials = new Credentials(accessToken)
+        };
+
+        try
+        {
+            // Get all repositories for the authenticated user
+            var repos = await userGitHubClient.Repository.GetAllForCurrent();
+            
+            // Get app submissions for each repository
+            var dashboardData = new List<DashboardRepositoryInfo>();
+
+            var submissionIds = repos.Select(r => AppSubmission.GetIdFromRepositoryName(r.FullName));
+            var submissionsMap = await dbSession.LoadAsync<AppSubmission?>(submissionIds);
+            foreach (var repo in repos)
+            {
+                var submissionId = AppSubmission.GetIdFromRepositoryName(repo.FullName);
+                var submission = submissionsMap[submissionId];
+                
+                // Check if the repository has ms-store-publish.json
+                var hasManifest = submission?.Manifest != null;
+                
+                dashboardData.Add(new DashboardRepositoryInfo
+                {
+                    Repository = repo,
+                    AppSubmission = submission,
+                    HasManifest = hasManifest
+                });
+            }
+
+            // Sort repositories: those with manifests first, then by name
+            var sortedData = dashboardData
+                .OrderByDescending(r => r.HasManifest)
+                .ThenBy(r => r.Repository.Name)
+                .ToList();
+
+            return View("dashboard", sortedData);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching repositories for dashboard");
+            return View("Error");
+        }
     }
 
     /// <summary>

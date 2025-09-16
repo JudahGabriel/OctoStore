@@ -15,4 +15,10 @@
     <PackageReference Include="RavenDB.StructuredLogger" Version="7.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\icons\octo-store.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

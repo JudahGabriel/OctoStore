@@ -31,7 +31,7 @@ namespace OctoStore.Models
         /// <summary>
         /// The URI to the ms-store-publish.json file in the repository.
         /// </summary>
-        public required Uri ManifestUrl { get; set; }
+        public Uri? ManifestUrl { get; set; }
 
         /// <summary>
         /// The URI to the GitHub repository where the ms-store-publish.json file is located.

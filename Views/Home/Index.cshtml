@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>OctoStore - Publish your GitHub apps to the Microsoft Store</title>
+    <base href="/" />
+
+    <meta name="description" content="Automatically publish your open source GitHub apps to the Microsoft Store">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.3/dist/styles/webawesome.css" />
+    <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.3/dist/webawesome.loader.js"></script>
+    
+    <style>
+        body {
+            font-family: var(--wa-font-sans);
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 25%, #ddeeff 50%, #d4e9ff 75%, #cce4ff 100%);
+            min-height: 100vh;
+            color: var(--wa-color-neutral-900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--wa-color-primary-600);
+            margin-bottom: 1rem;
+
+            img {
+                max-width: 200px;
+            }
+        }
+        
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--wa-color-neutral-600);
+            margin-bottom: 3rem;
+        }
+        
+        .features {
+            margin-top: 4rem;
+            text-align: left;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+        }
+        
+        .feature-icon {
+            width: 48px;
+            min-width: 48px;
+            height: 48px;
+            background: var(--wa-color-primary-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--wa-color-primary-600);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="logo"><img src="/icons/octo-store.png" /></h1>
+
+        <p class="tagline">
+            Publish your open source apps to the Microsoft Store by adding a single file to your repo.
+        </p>
+        
+        <wa-button href="/auth/login" class="login-btn">
+            <wa-icon name="github" slot="start" family="brands"></wa-icon>
+            Sign in with GitHub
+        </wa-button>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">
+                    <wa-icon name="zap"></wa-icon>
+                </div>
+                <div>
+                    <strong>Automatic Publishing</strong><br>
+                    <span style="color: var(--wa-color-neutral-600);">Just add a ms-store-publish.json file to your repository. We'll automatically publish your app to the Microsoft Store, making your app discoverable to the millions of Microsoft Store users. <a href="https://github.com/JudahGabriel/OctoStore/tree/main?tab=readme-ov-file#how-to-publish-my-app-to-the-microsoft-store" target="_blank">Read more...</a></span>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">
+                    <wa-icon name="shield-halved" family="classic"></wa-icon>
+                </div>
+                <div>
+                    <strong>Secure & Trusted</strong><br>
+                    <span style="color: var(--wa-color-neutral-600);">Microsoft manages the publishing of your app in the Store under the <strong>Open Source Apps on GitHub</strong> publisher.</span>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">
+                    <wa-icon name="eye"></wa-icon>
+                </div>
+                <div>
+                    <strong>Track Status</strong><br>
+                    <span style="color: var(--wa-color-neutral-600);">Monitor all your app submissions to the Microsoft Store in one dashboard. </span>
+                </div>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">
+                    <wa-icon name="windows" family="brands"></wa-icon>
+                </div>
+                <div>
+                    <strong>Native and Web</strong><br>
+                    <span style="color: var(--wa-color-neutral-600);">It doesn't matter if your app is Win32, PWA, UWP, MSIX, you name it. OctoStore can publish your app to the Store.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
