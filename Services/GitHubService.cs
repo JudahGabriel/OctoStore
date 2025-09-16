@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Octokit;
 using OctoStore.Models;
-using Raven.Client.Documents.Linq.Indexing;
-using System.Text;
 
 namespace OctoStore.Services;
 
@@ -14,12 +12,12 @@ public class GitHubService
     private readonly GitHubClient client;
     private readonly ILogger<GitHubService> logger;
 
-    public GitHubService(IOptions<AppSettings> appSettings, ILogger<GitHubService> logger)
+    public GitHubService(IOptions<GitHubSettings> gitHubSettings, ILogger<GitHubService> logger)
     {
         client = new GitHubClient(new ProductHeaderValue("OctoStore"));
-        if (!string.IsNullOrEmpty(appSettings.Value.GitHubToken))
+        if (!string.IsNullOrEmpty(gitHubSettings.Value.Token))
         {
-            client.Credentials = new Credentials(appSettings.Value.GitHubToken);
+            client.Credentials = new Credentials(gitHubSettings.Value.Token);
         }
 
         this.logger = logger;
