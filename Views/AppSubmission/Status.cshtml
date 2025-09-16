@@ -1,5 +1,6 @@
 ﻿@model OctoStore.Models.AppSubmission
 @using OctoStore.Models
+@using OctoStore.Common
 @using System.ComponentModel
 @using System.Reflection
 
@@ -141,6 +142,95 @@
             margin: 0;
             color: var(--wa-color-neutral-800);
             line-height: 1.5;
+        }
+        
+        .partner-feedback-content h1,
+        .partner-feedback-content h2,
+        .partner-feedback-content h3,
+        .partner-feedback-content h4,
+        .partner-feedback-content h5,
+        .partner-feedback-content h6 {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .partner-feedback-content p {
+            margin: 0 0 1rem 0;
+        }
+        
+        .partner-feedback-content ul,
+        .partner-feedback-content ol {
+            margin: 0 0 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .partner-feedback-content blockquote {
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            border-left: 4px solid var(--wa-color-primary-300);
+            background-color: var(--wa-color-neutral-50);
+            border-radius: 4px;
+        }
+        
+        .partner-feedback-content code {
+            background-color: var(--wa-color-neutral-100);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        
+        .partner-feedback-content pre {
+            background-color: var(--wa-color-neutral-100);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        /* Styles for What's New markdown content */
+        .whats-new-content h1,
+        .whats-new-content h2,
+        .whats-new-content h3,
+        .whats-new-content h4,
+        .whats-new-content h5,
+        .whats-new-content h6 {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .whats-new-content p {
+            margin: 0 0 1rem 0;
+        }
+        
+        .whats-new-content ul,
+        .whats-new-content ol {
+            margin: 0 0 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .whats-new-content blockquote {
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            border-left: 4px solid var(--wa-color-primary-300);
+            background-color: var(--wa-color-neutral-50);
+            border-radius: 4px;
+        }
+        
+        .whats-new-content code {
+            background-color: var(--wa-color-neutral-100);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        
+        .whats-new-content pre {
+            background-color: var(--wa-color-neutral-100);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
         }
         
         .partner-feedback-empty {
@@ -313,7 +403,7 @@
                                 @if (!string.IsNullOrEmpty(primaryListing.WhatsNew))
                                 {
                                     <p><strong>What's New:</strong></p>
-                                    <p style="margin-bottom: 1rem;">@primaryListing.WhatsNew</p>
+                                    <wa-card class="card-basic whats-new-content" style="margin-bottom: 1rem;">@MarkdownHelper.ToHtml(primaryListing.WhatsNew)</wa-card>
                                 }
                                 
                                 @if (primaryListing.Features?.Any() == true)
@@ -484,7 +574,7 @@
                                     <wa-icon name="person-circle" class="partner-feedback-author-icon"></wa-icon>
                                     <strong class="partner-feedback-author-name">@comment.Author</strong>
                                 </div>
-                                <p class="partner-feedback-content">@comment.Content</p>
+                                <div class="partner-feedback-content">@MarkdownHelper.ToHtml(comment.Content)</div>
                             </div>
                         }
                     </div>
