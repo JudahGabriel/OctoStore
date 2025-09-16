@@ -154,10 +154,4 @@ public class AppSubmissionController : Controller
         return RedirectToAction(nameof(Status), new { repo });
     }
 
-    //[HttpGet("getAll")]
-    //public async Task<IActionResult> GetAll([FromServices] IAsyncDocumentSession dbSession)
-    //{
-    //    var submissions = await dbSession.Query<AppSubmission>().ToListAsync();
-    //    return Ok(submissions);
-    //}
 }
