@@ -311,22 +311,24 @@
                             <div class="action-buttons">
                                 @if (repoInfo.HasManifest)
                                 {
-                                    <a href="/appsubmission/status?repo=@repoInfo.Repository.FullName" class="action-btn btn-primary">
-                                        <wa-icon name="eye"></wa-icon>
+                                    <wa-button href="/appsubmission/status?repo=@repoInfo.Repository.FullName" size="small" variant="neutral" appearance="plain">
+                                        <wa-icon name="eye" slot="start"></wa-icon>
                                         View Status
-                                    </a>
+                                    </wa-button>
                                 }
                                 else
                                 {
-                                    <a href="/appsubmission/scan?repo=@repoInfo.Repository.FullName" class="action-btn btn-secondary" onclick="this.innerHTML='<wa-icon name=\'loader-2\'></wa-icon> Scanning...'; return true;">
-                                        <wa-icon name="search"></wa-icon>
-                                        Scan Repository
-                                    </a>
+                                    <form action="/appsubmission/scan?repo=@repoInfo.Repository.FullName" method="POST">
+                                        <wa-button type="submit" variant="neutral" appearance="plain" size="small" title="Trigger a scan of this repo to search for ms-store-publish.json">
+                                            <wa-icon slot="start" name="search"></wa-icon>
+                                            Scan repo
+                                        </wa-button>
+                                    </form>
                                 }
-                                <a href="@repoInfo.Repository.HtmlUrl" target="_blank" class="action-btn btn-secondary">
-                                    <wa-icon name="external-link"></wa-icon>
+                                <wa-button href="@repoInfo.Repository.HtmlUrl" target="_blank" variant="neutral" appearance="plain" size="small">
+                                    <wa-icon name="external-link" slot="start"></wa-icon>
                                     View on GitHub
-                                </a>
+                                </wa-button>
                             </div>
                         </div>
                     </div>

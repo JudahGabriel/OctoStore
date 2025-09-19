@@ -188,6 +188,51 @@
             margin: 1rem 0;
         }
         
+        /* Styles for Description markdown content */
+        .description-content h1,
+        .description-content h2,
+        .description-content h3,
+        .description-content h4,
+        .description-content h5,
+        .description-content h6 {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .description-content p {
+            margin: 0 0 1rem 0;
+        }
+        
+        .description-content ul,
+        .description-content ol {
+            margin: 0 0 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .description-content blockquote {
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            border-left: 4px solid var(--wa-color-primary-300);
+            background-color: var(--wa-color-neutral-50);
+            border-radius: 4px;
+        }
+        
+        .description-content code {
+            background-color: var(--wa-color-neutral-100);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        
+        .description-content pre {
+            background-color: var(--wa-color-neutral-100);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
         /* Styles for What's New markdown content */
         .whats-new-content h1,
         .whats-new-content h2,
@@ -409,7 +454,7 @@
                                 var primaryListing = Model.Manifest.StoreListings.FirstOrDefault(l => l.Language == "en") ?? Model.Manifest.StoreListings.First();
                                 
                                 <p><strong>Description:</strong></p>
-                                <p style="margin-bottom: 1rem;">@primaryListing.Description</p>
+                                <wa-card class="card-basic description-content" style="margin-bottom: 1rem;">@MarkdownHelper.ToHtml(primaryListing.Description)</wa-card>
                                 
                                 @if (!string.IsNullOrEmpty(primaryListing.WhatsNew))
                                 {

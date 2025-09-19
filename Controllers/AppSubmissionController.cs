@@ -113,9 +113,32 @@ public class AppSubmissionController : Controller
             Owner = owner,
             Repo = repoName
         };
+
+        // See if the repo exists on GitHub.
+        var repoHtmlUrl = await gitHub.GetRepoUrl(owner, repoName);
+        if (repoHtmlUrl == null)
+        {
+            return BadRequest("The specified repository does not exist on GitHub.");
+        }
+
+        var repoId = AppSubmission.GetIdFromRepositoryName(repo);
+        var existingRepo = await dbSession.LoadAsync<AppSubmission>(repoId);
+        if (existingRepo == null)
+        {
+            existingRepo = new AppSubmission
+            {
+                Id = repoId,
+                Status = AppSubmissionStatus.Scanning,
+                RepositoryUrl = repoHtmlUrl,
+                RepositoryUserName = owner
+            };
+            await dbSession.StoreAsync(existingRepo);
+        }
+        existingRepo.Status = AppSubmissionStatus.Scanning;
+
         await dbSession.StoreAsync(repoScanRequest, $"RepositoryScanRequests/{owner}/{repoName}");
         await dbSession.SaveChangesAsync();
-        return Ok("Scan requested");
+        return RedirectToAction("dashboard");
     }
 
     /// <summary>

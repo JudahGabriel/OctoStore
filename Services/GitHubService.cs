@@ -43,6 +43,26 @@ public class GitHubService
         return searchResults.Items;
     }
 
+    /// <summary>
+    /// Gets the URL of a GitHub repository, or null if the repository doesn't exist.
+    /// </summary>
+    /// <param name="repoOwner">The GitHub user who owns the repository.</param>
+    /// <param name="repoName">The name of the repository.</param>
+    /// <returns>The HTML URL of the repository if it exists, otherwise null.</returns>
+    public async Task<Uri?> GetRepoUrl(string repoOwner, string repoName)
+    {
+        try
+        {
+            var repo = await client.Repository.Get(repoOwner, repoName);
+            return new Uri(repo.HtmlUrl);
+        }
+        catch (Exception error)
+        {
+            logger.LogWarning(error, "Unable to find repo URL for {owner}/{repoName} due to an error.", repoOwner, repoName);
+            return null;
+        }
+    }
+
     public async Task<SearchCode?> SearchRepoForFileName(string fileName, string repoOwner, string repoName, int page = 1, int take = 10)
     {
         // See if GitHub Search will find it. Note that Search does not index forked repos.
