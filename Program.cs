@@ -99,6 +99,7 @@ builder.Services.AddRavenDbDocStore(o =>
 });
 builder.Services.AddRavenDbAsyncSession();
 builder.Services.AddRavenStructuredLogger();
+builder.Services.AddHttpClient();
 builder.Services.AddSingleton<GitHubService>();
 builder.Services.AddSingleton<AppSubmissionService>();
 builder.Services.AddHostedService<GitHubPublishManifestFinder>();

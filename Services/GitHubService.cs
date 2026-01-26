@@ -10,9 +10,10 @@ namespace OctoStore.Services;
 public class GitHubService
 {
     private readonly GitHubClient client;
+    private readonly HttpClient httpClient;
     private readonly ILogger<GitHubService> logger;
 
-    public GitHubService(IOptions<GitHubSettings> gitHubSettings, ILogger<GitHubService> logger)
+    public GitHubService(IOptions<GitHubSettings> gitHubSettings, HttpClient httpClient, ILogger<GitHubService> logger)
     {
         client = new GitHubClient(new ProductHeaderValue("OctoStore"));
         if (!string.IsNullOrEmpty(gitHubSettings.Value.Token))
@@ -20,6 +21,7 @@ public class GitHubService
             client.Credentials = new Credentials(gitHubSettings.Value.Token);
         }
 
+        this.httpClient = httpClient;
         this.logger = logger;
     }
 
@@ -61,6 +63,35 @@ public class GitHubService
             logger.LogWarning(error, "Unable to find repo URL for {owner}/{repoName} due to an error.", repoOwner, repoName);
             return null;
         }
+    }
+
+    /// <summary>
+    /// Gets the repo owner and repo name from a GitHub repository URL.
+    /// </summary>
+    /// <param name="gitHubUrl">A GitHub URL.</param>
+    /// <returns>The repository's unique name, e.g. "JudahGabriel/Chavah"</returns>
+    /// <exception cref="ArgumentException"></exception>
+    public string GetRepoNameFromGitHubUrl(Uri gitHubUrl)
+    {
+        if (!gitHubUrl.IsAbsoluteUri)
+        {
+            throw new ArgumentException("The provided URL must be an absolute URL.", nameof(gitHubUrl));
+        }
+
+        if (gitHubUrl.Host != "github.com")
+        {
+            throw new ArgumentException("The provided URL is not a valid GitHub URL.", nameof(gitHubUrl));
+        }
+
+        var segments = gitHubUrl.AbsolutePath.Trim('/').Split('/');
+        if (segments.Length < 2)
+        {
+            throw new ArgumentException("The provided URL is not a valid GitHub repository URL.", nameof(gitHubUrl));
+        }
+
+        var repoOwner = segments[0];
+        var repoName = segments[1];
+        return $"{repoOwner}/{repoName}";
     }
 
     public async Task<SearchCode?> SearchRepoForFileName(string fileName, string repoOwner, string repoName, int page = 1, int take = 10)
@@ -157,6 +188,44 @@ public class GitHubService
         {
             logger.LogWarning(error, "Unable to fetch latest release for {repo}", repo.FullName);
             return null;
+        }
+    }
+
+    /// <summary>
+    /// Downloads a file from the specified GitHub release URL and returns its content as a stream.
+    /// </summary>
+    /// <param name="gitHubReleaseFile">The URI of the GitHub release file to download.</param>
+    /// <returns>A stream containing the downloaded file content.</returns>
+    public async Task<Stream> DownloadGitHubReleaseFile(Uri gitHubReleaseFile)
+    {
+        if (!gitHubReleaseFile.IsAbsoluteUri)
+        {
+            throw new ArgumentException("The provided URL must be an absolute URL.", nameof(gitHubReleaseFile));
+        }
+        if (gitHubReleaseFile.Host != "github.com")
+        {
+            throw new ArgumentException("The provided URL must be a GitHub URL.", nameof(gitHubReleaseFile));
+        }
+        if (gitHubReleaseFile.AbsolutePath.Contains("/releases/download/") == false)
+        {
+            throw new ArgumentException("The provided URL must be a GitHub release download URL.", nameof(gitHubReleaseFile));
+        }
+
+        try
+        {
+            httpClient.DefaultRequestHeaders.Remove("User-Agent");
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "OctoStore");
+            
+            logger.LogInformation("Downloading file from {url}", gitHubReleaseFile);
+            var response = await httpClient.GetAsync(gitHubReleaseFile);
+            response.EnsureSuccessStatusCode();
+            
+            return await response.Content.ReadAsStreamAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to download file from {url}", gitHubReleaseFile);
+            throw;
         }
     }
 }
