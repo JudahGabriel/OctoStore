@@ -1,18 +1,7 @@
 @model List<OctoStore.Models.DashboardRepositoryInfo>
 @using OctoStore.Models
-@using System.ComponentModel
-@using System.Reflection
 
 @{
-    string GetEnumDescription(Enum value)
-    {
-        var field = value.GetType().GetField(value.ToString());
-        if (field == null) return value.ToString().Replace("_", " ");
-        
-        var attribute = field.GetCustomAttribute<DescriptionAttribute>();
-        return !string.IsNullOrEmpty(attribute?.Description) ? attribute.Description : value.ToString().Replace("_", " ");
-    }
-    
     var userName = Context.User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value ?? "Unknown";
 }
 
@@ -21,7 +10,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>@userName's Repositories - OctoStore Dashboard</title>
+    <title>OctoStore - Publish your open source app to the Microsoft Store</title>
     <base href="/" />
 
     <meta name="description" content="Dashboard showing your GitHub repositories and their Microsoft Store submission status">
@@ -29,173 +18,15 @@
 
     <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.3/dist/styles/webawesome.css" />
     <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.3/dist/webawesome.loader.js"></script>
-    
-    <style>
-        body {
-            font-family: var(--wa-font-sans);
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 25%, #ddeeff 50%, #d4e9ff 75%, #cce4ff 100%);
-            min-height: 100vh;
-            color: var(--wa-color-neutral-900);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .user-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .login-btn {
-            color: white;
-        }
-        
-        .logout-btn {
-            color: var(--wa-color-neutral-600);
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--wa-color-neutral-300);
-            border-radius: 6px;
-            background: white;
-            transition: all 0.2s;
-        }
-        
-        .logout-btn:hover {
-            background: var(--wa-color-neutral-50);
-            color: var(--wa-color-neutral-800);
-        }
-        
-        .repo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .repo-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .repo-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-        }
-        
-        .repo-card.has-manifest {
-            border: 2px solid var(--wa-color-success-500);
-        }
-        
-        .repo-header {
-            padding: 1rem;
-            border-bottom: 1px solid var(--wa-color-neutral-200);
-        }
-        
-        .repo-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 0 0 0.5rem 0;
-        }
-        
-        .repo-name a {
-            color: var(--wa-color-primary-600);
-            text-decoration: none;
-        }
-        
-        .repo-name a:hover {
-            text-decoration: underline;
-        }
-        
-        .repo-description {
-            color: var(--wa-color-neutral-600);
-            font-size: 0.9rem;
-            margin: 0;
-        }
-        
-        .repo-content {
-            padding: 1rem;
-        }
-        
-        .manifest-badge {
-            margin-bottom: 1rem;
-        }
-        
-        .status-section {
-            margin-top: 1rem;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-        
-        .action-btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        
-        .btn-primary {
-            background: var(--wa-color-primary-600);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: var(--wa-color-primary-700);
-            color: white;
-            text-decoration: none;
-        }
-        
-        .btn-secondary {
-            background: var(--wa-color-neutral-100);
-            color: var(--wa-color-neutral-700);
-            border: 1px solid var(--wa-color-neutral-300);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--wa-color-neutral-200);
-            color: var(--wa-color-neutral-800);
-            text-decoration: none;
-        }
-    </style>
+    <link rel="stylesheet" href="~/css/dashboard.css" />
 </head>
 
 <body>
     <div class="container">
         <div class="header">
             <div>
-                <h1 style="margin: 0;">OctoStore Dashboard</h1>
-                <p style="margin: 0.5rem 0 0 0; color: var(--wa-color-neutral-600);">
+                <h1 class="dashboard-title">Publish your open source app to the Microsoft Store</h1>
+                <p class="dashboard-subtitle">
                     Manage your GitHub repositories and Microsoft Store submissions
                 </p>
             </div>
@@ -205,8 +36,8 @@
                     <img src="@Context.User.FindFirst("avatar_url")?.Value" alt="@userName" class="user-avatar" />
                 }
                 <div>
-                    <div style="font-weight: 600;">@userName</div>
-                    <div style="font-size: 0.9rem; color: var(--wa-color-neutral-600);">@Model.Count repositories</div>
+                    <div class="user-name">@userName</div>
+                    <div class="user-repo-count">@Model.Count repositories</div>
                 </div>
                 <a href="/auth/logout" class="logout-btn">Sign Out</a>
             </div>
@@ -215,10 +46,10 @@
         @if (Model.Count == 0)
         {
             <wa-card>
-                <div style="text-align: center; padding: 2rem;">
-                    <wa-icon name="inbox" style="font-size: 3rem; color: var(--wa-color-neutral-400); margin-bottom: 1rem;"></wa-icon>
-                    <h3 style="margin: 0 0 0.5rem 0;">No repositories found</h3>
-                    <p style="margin: 0; color: var(--wa-color-neutral-600);">
+                <div class="empty-state">
+                    <wa-icon name="inbox" class="empty-state-icon"></wa-icon>
+                    <h3 class="empty-state-title">No repositories found</h3>
+                    <p class="empty-state-description">
                         Make sure you have repositories on GitHub to see them here.
                     </p>
                 </div>
@@ -227,111 +58,9 @@
         else
         {
             <div class="repo-grid">
-                @foreach (var repoInfo in Model)
+                @foreach (var repoInfo in Model.OrderByDescending(r => r.AppSubmission != null))
                 {
-                    var url = repoInfo.AppSubmission != null ? "/appsubmission/status?repo=" + repoInfo.AppSubmission.Id.Replace("AppSubmissions/", string.Empty) : repoInfo.Repository.HtmlUrl;
-                    <div class="repo-card @(repoInfo.HasManifest ? "has-manifest" : "")">
-                        <div class="repo-header">
-                            <h3 class="repo-name">
-                                <a href="@url" target="_blank">
-                                    @repoInfo.Repository.Name
-                                </a>
-                            </h3>
-                            @if (!string.IsNullOrEmpty(repoInfo.Repository.Description))
-                            {
-                                <p class="repo-description">@repoInfo.Repository.Description</p>
-                            }
-                        </div>
-                        
-                        <div class="repo-content">
-                            @if (repoInfo.HasManifest)
-                            {
-                                <div class="manifest-badge">
-                                    <wa-badge variant="success">
-                                        <wa-icon name="check" style="margin-right: 0.25rem;"></wa-icon>
-                                        Has ms-store-publish.json
-                                    </wa-badge>
-                                </div>
-                                
-                                @if (repoInfo.AppSubmission != null)
-                                {
-                                    <div class="status-section">
-                                        <strong>Submission Status:</strong>
-                                        @{
-                                            var statusVariant = repoInfo.AppSubmission.Status switch
-                                            {
-                                                AppSubmissionStatus.Processing => "primary",
-                                                AppSubmissionStatus.AwaitingReview => "primary", 
-                                                AppSubmissionStatus.Published => "success",
-                                                AppSubmissionStatus.Error => "danger",
-                                                AppSubmissionStatus.WaitingToSignAppDevAgreement => "warning",
-                                                AppSubmissionStatus.Scanning => "primary",
-                                                _ => "neutral"
-                                            };
-                                            
-                                            var statusIcon = repoInfo.AppSubmission.Status switch
-                                            {
-                                                AppSubmissionStatus.Processing => "upload",
-                                                AppSubmissionStatus.AwaitingReview => "clock", 
-                                                AppSubmissionStatus.Published => "check-circle",
-                                                AppSubmissionStatus.Error => "x-circle",
-                                                AppSubmissionStatus.WaitingToSignAppDevAgreement => "clock",
-                                                AppSubmissionStatus.Scanning => "search",
-                                                _ => "exclamation-triangle"
-                                            };
-                                        }
-                                        <wa-badge variant="@statusVariant" style="margin-left: 0.5rem;">
-                                            <wa-icon name="@statusIcon" style="margin-right: 0.25rem;"></wa-icon>
-                                            @GetEnumDescription(repoInfo.AppSubmission.Status)
-                                        </wa-badge>
-                                        
-                                        @if (repoInfo.AppSubmission.SubmissionDate != default)
-                                        {
-                                            <div style="font-size: 0.85rem; color: var(--wa-color-neutral-600); margin-top: 0.5rem;">
-                                                Submitted: @repoInfo.AppSubmission.SubmissionDate.ToString("MMM dd, yyyy")
-                                            </div>
-                                        }
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <div class="manifest-badge">
-                                    <wa-badge variant="neutral">
-                                        <wa-icon name="info" style="margin-right: 0.25rem;"></wa-icon>
-                                        No ms-store-publish.json
-                                    </wa-badge>
-                                </div>
-                                
-                                <p style="font-size: 0.9rem; color: var(--wa-color-neutral-600); margin: 1rem 0;">
-                                    Add a <code>ms-store-publish.json</code> file to publish this app to the Microsoft Store.
-                                </p>
-                            }
-                            
-                            <div class="action-buttons">
-                                @if (repoInfo.HasManifest)
-                                {
-                                    <wa-button href="/appsubmission/status?repo=@repoInfo.Repository.FullName" size="small" variant="neutral" appearance="plain">
-                                        <wa-icon name="eye" slot="start"></wa-icon>
-                                        View Status
-                                    </wa-button>
-                                }
-                                else
-                                {
-                                    <form action="/appsubmission/scan?repo=@repoInfo.Repository.FullName" method="POST">
-                                        <wa-button type="submit" variant="neutral" appearance="plain" size="small" title="Trigger a scan of this repo to search for ms-store-publish.json">
-                                            <wa-icon slot="start" name="search"></wa-icon>
-                                            Scan repo
-                                        </wa-button>
-                                    </form>
-                                }
-                                <wa-button href="@repoInfo.Repository.HtmlUrl" target="_blank" variant="neutral" appearance="plain" size="small">
-                                    <wa-icon name="external-link" slot="start"></wa-icon>
-                                    View on GitHub
-                                </wa-button>
-                            </div>
-                        </div>
-                    </div>
+                    @await Html.PartialAsync("_RepoCard", repoInfo)
                 }
             </div>
         }

@@ -1,0 +1,241 @@
+body {
+    font-family: var(--wa-font-sans);
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 25%, #ddeeff 50%, #d4e9ff 75%, #cce4ff 100%);
+    min-height: 100vh;
+    color: var(--wa-color-neutral-900);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.login-btn {
+    color: white;
+}
+
+.logout-btn {
+    color: var(--wa-color-neutral-600);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--wa-color-neutral-300);
+    border-radius: 6px;
+    background: white;
+    transition: all 0.2s;
+}
+
+.logout-btn:hover {
+    background: var(--wa-color-neutral-50);
+    color: var(--wa-color-neutral-800);
+}
+
+.repo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 1.5rem;
+}
+
+.repo-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.repo-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.repo-card.has-manifest {
+    border: 2px solid var(--wa-color-success-500);
+}
+
+.repo-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--wa-color-neutral-200);
+}
+
+.repo-header-with-icon {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.repo-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.repo-description {
+    color: var(--wa-color-neutral-600);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.repo-content {
+    padding: 1rem;
+}
+
+.manifest-badge {
+    margin-bottom: 1rem;
+}
+
+.status-section {
+    margin-top: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.btn-primary {
+    background: var(--wa-color-primary-600);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--wa-color-primary-700);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background: var(--wa-color-neutral-100);
+    color: var(--wa-color-neutral-700);
+    border: 1px solid var(--wa-color-neutral-300);
+}
+
+.btn-secondary:hover {
+    background: var(--wa-color-neutral-200);
+    color: var(--wa-color-neutral-800);
+    text-decoration: none;
+}
+
+.dashboard-title {
+    margin: 0;
+}
+
+.dashboard-subtitle {
+    margin: 0.5rem 0 0 0;
+    color: var(--wa-color-neutral-600);
+}
+
+.user-name {
+    font-weight: 600;
+}
+
+.user-repo-count {
+    font-size: 0.9rem;
+    color: var(--wa-color-neutral-600);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    color: var(--wa-color-neutral-400);
+    margin-bottom: 1rem;
+}
+
+.empty-state-title {
+    margin: 0 0 0.5rem 0;
+}
+
+.empty-state-description {
+    margin: 0;
+    color: var(--wa-color-neutral-600);
+}
+
+.badge-icon {
+    margin-right: 0.25rem;
+}
+
+.status-badge {
+    margin-left: 0.5rem;
+}
+
+.submission-date {
+    font-size: 0.85rem;
+    color: var(--wa-color-neutral-600);
+    margin-top: 0.5rem;
+}
+
+.no-manifest-hint {
+    font-size: 0.9rem;
+    color: var(--wa-color-neutral-600);
+    margin: 1rem 0;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 2rem 0 1rem 0;
+    color: var(--wa-color-neutral-800);
+}
+
+.section-title:first-of-type {
+    margin-top: 0;
+}
+
+.published-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.published-icon {
+    font-size: 2rem;
+    color: var(--wa-color-success-600);
+}
+
+.published-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--wa-color-success-600);
+}

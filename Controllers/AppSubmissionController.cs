@@ -141,6 +141,85 @@ public class AppSubmissionController : Controller
         return RedirectToAction("dashboard");
     }
 
+    [HttpGet("publish")]
+    [Authorize]
+    public async Task<IActionResult> Publish([FromQuery] string repo, [FromServices] IAsyncDocumentSession dbSession)
+    {
+        AppSubmission? submission = null;
+        if (!string.IsNullOrEmpty(repo))
+        {
+            submission = await dbSession.LoadAsync<AppSubmission>(AppSubmission.GetIdFromRepositoryName(repo));
+            if (submission != null && !submission.IsAuthorized(User.Identity?.Name))
+            {
+                return Unauthorized();
+            }
+        }
+
+        return View("Publish", submission);
+    }
+
+    [HttpPost("checkGuestUser")]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CheckGuestUser([FromForm] string repo, [FromServices] IAsyncDocumentSession dbSession)
+    {
+        if (string.IsNullOrWhiteSpace(repo))
+        {
+            return BadRequest("Repository is required.");
+        }
+
+        var id = AppSubmission.GetIdFromRepositoryName(repo);
+        var submission = await dbSession.LoadAsync<AppSubmission>(id);
+        if (submission is null)
+        {
+            return NotFound();
+        }
+
+        if (!submission.IsAuthorized(User.Identity?.Name))
+        {
+            return Unauthorized();
+        }
+
+        if (submission.DeveloperStep < AppSubmissionDeveloperStep.InviteOctoStoreToPartnerCenter)
+        {
+            submission.DeveloperStep = AppSubmissionDeveloperStep.InviteOctoStoreToPartnerCenter;
+            await dbSession.SaveChangesAsync();
+        }
+
+        return RedirectToAction(nameof(Publish), new { repo });
+    }
+
+    [HttpPost("checkDeveloperRole")]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CheckDeveloperRole([FromForm] string repo, [FromServices] IAsyncDocumentSession dbSession)
+    {
+        if (string.IsNullOrWhiteSpace(repo))
+        {
+            return BadRequest("Repository is required.");
+        }
+
+        var id = AppSubmission.GetIdFromRepositoryName(repo);
+        var submission = await dbSession.LoadAsync<AppSubmission>(id);
+        if (submission is null)
+        {
+            return NotFound();
+        }
+
+        if (!submission.IsAuthorized(User.Identity?.Name))
+        {
+            return Unauthorized();
+        }
+
+        if (submission.DeveloperStep < AppSubmissionDeveloperStep.AssignDeveloperRoleToOctoStore)
+        {
+            submission.DeveloperStep = AppSubmissionDeveloperStep.AssignDeveloperRoleToOctoStore;
+            await dbSession.SaveChangesAsync();
+        }
+
+        return RedirectToAction(nameof(Publish), new { repo });
+    }
+
     /// <summary>
     /// Marks the developer agreement as confirmed for a given repository's app submission.
     /// </summary>

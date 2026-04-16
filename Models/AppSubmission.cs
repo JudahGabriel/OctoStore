@@ -49,6 +49,11 @@ namespace OctoStore.Models
         public required AppSubmissionStatus Status { get; set; }
 
         /// <summary>
+        /// The highest step that the developer has completed in the app submission process. This is used to track the developer's progress and to determine what instructions or next steps to show them when they view their submission status.
+        /// </summary>
+        public AppSubmissionDeveloperStep DeveloperStep { get; set; }
+
+        /// <summary>
         /// Any error message associated with the submission. This is set if the submission fails to process or if the manifest cannot be parsed.
         /// This error message is shown to the developer when they view their submission status.
         /// </summary>

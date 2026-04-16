@@ -1,0 +1,56 @@
+@model OctoStore.Models.DashboardRepositoryInfo
+@using OctoStore.Models
+
+@{
+    var url = Model.AppSubmission != null
+        ? "/appsubmission/status?repo=" + Model.AppSubmission.Id.Replace("AppSubmissions/", string.Empty)
+        : Model.Repository.HtmlUrl;
+    var isPublished = Model.AppSubmission?.Status == AppSubmissionStatus.Published;
+}
+
+<div class="repo-card">
+    <div class="repo-header">
+        @if (Model.AppSubmission?.Manifest?.IconUrl != null)
+        {
+            <div class="repo-header-with-icon">
+                <img src="@Model.AppSubmission.Manifest.IconUrl" alt="@Model.Repository.Name icon" class="repo-icon" />
+                <div>
+                    <h2 class="repo-name">
+                        @Model.Repository.Name
+                    </h2>
+                    @if (!string.IsNullOrEmpty(Model.Repository.Description))
+                    {
+                        <p class="repo-description">@Model.Repository.Description</p>
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <h2>
+                @Model.Repository.Name
+            </h2>
+            @if (!string.IsNullOrEmpty(Model.Repository.Description))
+            {
+                <p class="repo-description">@Model.Repository.Description</p>
+            }
+        }
+    </div>
+
+    <div class  ="repo-content">
+        @if (isPublished)
+        {
+            <div class="published-status">
+                <wa-icon name="check-circle" class="published-icon"></wa-icon>
+                <span class="published-text">Published</span>
+            </div>
+        }
+        else
+        {
+            <wa-button href="/appsubmission/publish?repo=@Model.Repository.FullName" variant="neutral" appearance="outlined" class="publish-btn">
+                <wa-icon name="play" slot="start"></wa-icon>
+                Publish to the Store
+            </wa-button>
+        }
+    </div>
+</div>

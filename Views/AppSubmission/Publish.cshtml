@@ -1,0 +1,178 @@
+@model OctoStore.Models.AppSubmission
+@using OctoStore.Models
+
+@{
+    var repoName = Model?.Id?.Replace("AppSubmissions/", string.Empty) ?? "";
+    var step = Model?.DeveloperStep ?? AppSubmissionDeveloperStep.None;
+}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Publish to the Store - OctoStore</title>
+    <base href="/" />
+
+    <meta name="description" content="Publish your open source app to the Microsoft Store">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://early.webawesome.com/webawesome@3.0.0-beta.3/dist/styles/webawesome.css" />
+    <script type="module" src="https://early.webawesome.com/webawesome@3.0.0-beta.3/dist/webawesome.loader.js"></script>
+    <link rel="stylesheet" href="~/css/publish.css" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="publish-header">
+            <h1 class="publish-title">Publish to the Microsoft Store</h1>
+            <p class="publish-subtitle">
+                Follow these steps to get your open source app published to the Microsoft Store.
+            </p>
+        </div>
+
+        <div class="steps">
+            @* Step 1: Add ms-store-publish.json *@
+            <wa-card class="step-card">
+                <div slot="header">
+                    <div class="step-heading">
+                        @if (step >= AppSubmissionDeveloperStep.AddManifestToRepo)
+                        {
+                            <wa-icon name="check-circle" class="step-complete-icon"></wa-icon>
+                        }
+                        else
+                        {
+                            <span class="step-number">1</span>
+                        }
+                        <h2 class="step-title">Add <code>ms-store-publish.json</code></h2>
+                    </div>
+                </div>
+                <p class="step-description">
+                    Add a <code>ms-store-publish.json</code> file to the root of your GitHub repository.
+                    This manifest file contains details about your app, such as its name, description, category, and screenshots.
+                </p>
+                <p class="step-description">
+                    See the <a href="https://github.com/JudahGabriel/OctoStore/blob/main/README.md#how-to-publish-my-app-to-the-microsoft-store" target="_blank" class="step-link">documentation</a>
+                    for the full format and available options for this file.
+                </p>
+            </wa-card>
+
+            @* Step 2: Link Partner Center Account *@
+            <wa-card class="step-card">
+                <div slot="header">
+                    <div class="step-heading">
+                        @if (step >= AppSubmissionDeveloperStep.LinkPartnerCenterAccount)
+                        {
+                            <wa-icon name="check-circle" class="step-complete-icon"></wa-icon>
+                        }
+                        else
+                        {
+                            <span class="step-number">2</span>
+                        }
+                        <h2 class="step-title">Link Partner Center Account</h2>
+                    </div>
+                </div>
+                <p class="step-description">
+                    You'll need a free Microsoft Partner Center account to publish your app to the Microsoft Store.
+                    If you already have one, you're all set. Otherwise, create a new account to get started.
+                </p>
+                <div class="step-actions">
+                    <wa-button href="https://partner.microsoft.com/en-us/dashboard" target="_blank" variant="neutral" size="small">
+                        <wa-icon name="link" slot="start"></wa-icon>
+                        Use my existing Partner Center account
+                    </wa-button>
+                    <wa-button href="https://partner.microsoft.com/en-us/dashboard/registration" target="_blank" variant="neutral" size="small">
+                        <wa-icon name="plus" slot="start"></wa-icon>
+                        Create a new Partner Center account
+                    </wa-button>
+                </div>
+            </wa-card>
+
+            @* Step 3: Invite OctoStore *@
+            <wa-card class="step-card">
+                <div slot="header">
+                    <div class="step-heading">
+                        @if (step >= AppSubmissionDeveloperStep.InviteOctoStoreToPartnerCenter)
+                        {
+                            <wa-icon name="check-circle" class="step-complete-icon"></wa-icon>
+                        }
+                        else
+                        {
+                            <span class="step-number">3</span>
+                        }
+                        <h2 class="step-title">Invite OctoStore</h2>
+                    </div>
+                </div>
+                <p class="step-description">
+                    Invite OctoStore as a guest user to your Partner Center account so it can create and manage app submissions on your behalf.
+                    Sign in with your Partner Center account and add <strong>opensourceappsongithub@@outlook.com</strong> as a guest user.
+                </p>
+                <div class="step-actions">
+                    <wa-button href="https://admin.cloud.microsoft/?#/GuestUsers" target="_blank" variant="neutral" size="small">
+                        <wa-icon name="external-link" slot="start"></wa-icon>
+                        Invite guest user
+                    </wa-button>
+                    @if (!string.IsNullOrEmpty(repoName))
+                    {
+                        <form action="/appsubmission/checkGuestUser" method="POST" class="step-form">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="repo" value="@repoName" />
+                            <wa-button type="submit" variant="brand" size="small">
+                                <wa-icon name="check" slot="start"></wa-icon>
+                                Done, check user
+                            </wa-button>
+                        </form>
+                    }
+                </div>
+            </wa-card>
+
+            @* Step 4: Assign Developer Role *@
+            <wa-card class="step-card">
+                <div slot="header">
+                    <div class="step-heading">
+                        @if (step >= AppSubmissionDeveloperStep.AssignDeveloperRoleToOctoStore)
+                        {
+                            <wa-icon name="check-circle" class="step-complete-icon"></wa-icon>
+                        }
+                        else
+                        {
+                            <span class="step-number">4</span>
+                        }
+                        <h2 class="step-title">Assign Developer Role</h2>
+                    </div>
+                </div>
+                <p class="step-description">
+                    Assign the <strong>Developer</strong> role to OctoStore in your Partner Center account.
+                    This allows OctoStore to create and manage app submissions on your behalf.
+                </p>
+                <ol class="step-instructions">
+                    <li>Go to <a href="https://partner.microsoft.com/en-us/dashboard/account/v3/usermanagement" target="_blank" class="step-link">Partner Center users</a></li>
+                    <li>Select the OctoStore account (<strong>OpenSourceAppsOnGitHub@@outlook.com</strong>)</li>
+                    <li>Choose the <strong>Developer</strong> role</li>
+                    <li>Click <strong>Save</strong></li>
+                </ol>
+                <div class="step-actions">
+                    @if (!string.IsNullOrEmpty(repoName))
+                    {
+                        <form action="/appsubmission/checkDeveloperRole" method="POST" class="step-form">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="repo" value="@repoName" />
+                            <wa-button type="submit" variant="brand" size="small">
+                                <wa-icon name="check" slot="start"></wa-icon>
+                                Done, check role
+                            </wa-button>
+                        </form>
+                    }
+                </div>
+            </wa-card>
+        </div>
+
+        <div class="back-link">
+            <wa-button href="/appsubmission/dashboard" variant="text" size="small">
+                <wa-icon name="arrow-left" slot="start"></wa-icon>
+                Back to Dashboard
+            </wa-button>
+        </div>
+    </div>
+</body>
+</html>
